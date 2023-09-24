@@ -1,11 +1,10 @@
-const PROD = {
-
+export const PROD = {
+    
 };
 
-const DEV = {
+export const DEV = {
     host: "localhost",
 };
 
-const ENV = DEV;
-const PORT = 4000;
-module.exports = {ENV, PORT}
+export const ENV = DEV;
+export const PORT = 4000;

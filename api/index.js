@@ -1,14 +1,14 @@
-const express =  require("express")
-const cors = require("cors")
-const MongoClient = require('mongodb').MongoClient
-const bcrypt = require("bcrypt")
-const jwt = require("jsonwebtoken")
+import express  from "express"
+import cors from "cors"
+import { MongoClient } from 'mongodb'
+import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken"
 
-const {ENV, PORT} = require("./const.js")
+import {ENV, PORT} from "./const.js"
 
 const URI = "mongodb+srv://ChiefSupreme:6eDN5HrTXGbOmuXt@fpm-db.uda1w7k.mongodb.net/?retryWrites=true&w=majority&appName=AtlasApp";
 
-
+let db;
 const app = express();
 
 app.use(express.json());
