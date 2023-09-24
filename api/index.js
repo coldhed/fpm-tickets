@@ -1,34 +1,33 @@
 import express  from "express"
 import cors from "cors"
-import { MongoClient } from 'mongodb'
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import dotenv from 'dotenv';
 dotenv.config();
 
 import {ENV, PORT} from "./const.js"
+import { connectDB } from './db.js';
+import {usersRouter} from "./routes/routes.js"
 
-let db;
+
 const app = express();
 
 app.use(express.json());
 app.use(cors());
 
-async function connectDB(){
-    let client=new MongoClient(process.env.MONGODB_URI)
-    await client.connect();
-    db=client.db();
-    console.log("conectado a la base de datos")
-}
 
 //Ruta por defualt
 app.get("/", async (req, res) => {
-    res.send("Servidor trabajando en el puerto");
-
+    res.send("Server running");
+    
 });
 
+// ROUTES
+app.use("/users", usersRouter)
+
+
 app.listen(PORT, () => {
-    console.log("Servidor iniciado");
+    console.log("Server started");
     connectDB()
-    console.log("DB connected")
+    console.log("DB connected");
 });

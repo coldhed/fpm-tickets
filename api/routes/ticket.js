@@ -7,3 +7,5 @@ router.post("ruta", async (request, response) => {
     
 })
 */
+
+export default router;
