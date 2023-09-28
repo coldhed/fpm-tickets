@@ -2,11 +2,11 @@ import { connectDB } from "../db.js";
 import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken';
 
-async function createNewUser(email, username, fullName, password, rol) {
-    // check if a user with that username already exists
+async function createNewUser(email, fullName, password, rol) {
+    // check if a user with that email already exists
     let db = await connectDB();
 
-    let oldUser = await db.collection("Usuarios").findOne({ "nombre_de_usuario": username });
+    let oldUser = await db.collection("Usuarios").findOne({ "correo": email });
 
     if (oldUser === null) {
 
@@ -17,7 +17,6 @@ async function createNewUser(email, username, fullName, password, rol) {
 
             let newUser = {
                 "correo": email,
-                "nombre_de_usuario": username,
                 "nombre_completo": fullName,
                 "contrasena": hash,
                 "last_login": Date(),
@@ -35,17 +34,17 @@ async function createNewUser(email, username, fullName, password, rol) {
 }
 
 async function doLogin(req, res) {
-    let username = req.body.username;
-    let password = req.body.password;
+    let email = req.body.correo;
+    let password = req.body.contrasena;
 
     // check req body is not empty
-    if (!username || !password) {
+    if (!email || !password) {
         return res.status(400).json({ error: "Username or password empty." });
     }
 
     const db = await connectDB();
 
-    let user = await db.collection("Usuarios").findOne({ "nombre_de_usuario": username });
+    let user = await db.collection("Usuarios").findOne({ "correo": email });
     if (user == null) { // user not found
         return res.sendStatus(401);
     }
@@ -60,7 +59,7 @@ async function doLogin(req, res) {
         // passwords match
         if (result) {
             let token = jwt.sign({
-                user: username,
+                user: email,
                 rol: user.rol,
             },
                 process.env.JWT_SECRET,
@@ -69,7 +68,7 @@ async function doLogin(req, res) {
 
             res.json({
                 "token": token,
-                "id": username,
+                "id": email,
                 "fullname": user.nombre_completo
             });
         } else {
