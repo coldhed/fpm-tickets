@@ -14,8 +14,6 @@ router.get("/", async (request, response) => {
 })
 
 router.post("/newUser", async(req, res) => {
-    console.log("New user request");
-
     let email = req.body.correo;
     let username = req.body.nombre_de_usuario;
     let fullName = req.body.nombre_completo;
@@ -23,8 +21,8 @@ router.post("/newUser", async(req, res) => {
     let rol = req.body.rol;
 
     let status = await createNewUser(email, username, fullName, password, rol);
-
-    res.send(status);
+    console.log(`status: ${status}`);
+    res.sendStatus(status);
 })
 
 
