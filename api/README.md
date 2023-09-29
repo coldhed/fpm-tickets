@@ -14,4 +14,4 @@ Endpoints para el manejo de usuarios del sistema. Dirección desde root: /users
 Espera un JSON con las siguientes llaves: correo, nombre_completo, contrasena, rol. Regresa el estado 201 en caso de haber creado el usuario correctamente.
 
 **/login | Post**
-Espera un JSON con dos llaves: correo y contrasena. Regresa un JSON con los siguientes atributos en caso de éxito: "token" para un JWT usado para Auth, "id" siendo el correo con el que se identifica al usuario, y "fullname" para el nombre completo del usuario. 
+Espera un JSON con dos llaves: correo y contrasena. Regresa un JSON con los siguientes atributos en caso de éxito: "token" para un JWT usado para Auth, "id" siendo el correo con el que se identifica al usuario, y "fullName" para el nombre completo del usuario. 
