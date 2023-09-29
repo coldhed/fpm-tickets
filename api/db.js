@@ -3,18 +3,21 @@ import { MongoClient } from 'mongodb'
 
 let db;
 
-async function connectDB(){
-    if (db) return db;
+async function connectDB() {
+    if (db) {
+        console.log("db just returned")
+        return db;
+    }
 
-    let client=new MongoClient(process.env.MONGODB_URI)
+    let client = new MongoClient(process.env.MONGODB_URI)
 
     try {
         await client.connect();
-        db=client.db("");
+        db = client.db("");
         return db;
-    } catch(error) {
+    } catch (error) {
         console.error('Error connecting to the database:', error);
-        throw error;    
+        throw error;
     }
 }
 
