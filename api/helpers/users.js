@@ -34,6 +34,7 @@ async function createNewUser(email, fullName, password, rol) {
 }
 
 async function doLogin(req, res) {
+    console.log("Login request");
     let email = req.body.correo;
     let password = req.body.contrasena;
 
@@ -69,7 +70,7 @@ async function doLogin(req, res) {
             res.json({
                 "token": token,
                 "id": email,
-                "fullname": user.nombre_completo
+                "fullName": user.nombre_completo
             });
         } else {
             // wrong password
