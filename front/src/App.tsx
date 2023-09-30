@@ -11,7 +11,7 @@ import {
 import { Route } from 'react-router-dom';
 import { dataProvider } from "./dataProvider";
 import authProvider from "./authProvider";
-import { TicketList } from "./ticket";
+import { TicketList } from "./elements/TicketList";
 
 import { CeLayout } from "./layouts/CeLayout";
 
@@ -19,14 +19,7 @@ import { CeLayout } from "./layouts/CeLayout";
 export const App = () => (
     <Admin dataProvider={dataProvider} authProvider={authProvider}>
         {permissions => {
-            console.log("inside admin: ", permissions);
-            if (!permissions) {
-                console.log("no permissions")
-                useLogout()();
-                return null;
-            };
 
-            console.log("returning as if permissions")
             return (
                 <>
                     <CustomRoutes>

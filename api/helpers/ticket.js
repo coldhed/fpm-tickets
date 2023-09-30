@@ -13,17 +13,16 @@ async function createNewTicket(titulo, categoria, aula, prioridad, resolucion, e
             "aula": aula,
             "prioridad": prioridad,
             "resolucion": resolucion,
-            "estatus": estatus, 
+            "estatus": estatus,
             "u_mod": Date(),
             //"cierre": Date(),
         };
         await db.collection("Usuarios").insertOne(newTicket);
         return 201;
     } catch {
-        console.log("Problem hashing the password");
         return 500;
     }
-    
+
 }
 
 export { createNewTicket };

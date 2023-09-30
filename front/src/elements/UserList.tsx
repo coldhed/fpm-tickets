@@ -6,14 +6,14 @@ export const UserList = () => {
 
     return (
         <List>
-            {permissions === "admin" ?
-                <Datagrid rowClick="edit">
-                    <TextField source="nombre_completo" label="Nombre Completo" />
-                    <EmailField source="correo" label="Correo" />
-                    <TextField source="rol" label="Rol" />
-                    <EmailField source="coor_nac" label="Coordinador Nacional" />
-                </Datagrid>
-                : null}
+            {/* {permissions === "admin" ? */}
+            <Datagrid rowClick="edit">
+                <TextField source="nombre_completo" label="Nombre Completo" />
+                <EmailField source="correo" label="Correo" />
+                <TextField source="rol" label="Rol" />
+                <EmailField source="coor_nac" label="Coordinador Nacional" />
+            </Datagrid>
+            {/* : null} */}
         </List>
     );
 };
