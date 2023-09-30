@@ -1,4 +1,6 @@
-const authProvider = {
+import { AuthProvider } from 'react-admin';
+
+const authProvider : AuthProvider = {
     // stores a function that does the login
     login: async ({ username, password }) => {
         const request = new Request("http://127.0.0.1:4000/Usuarios/login", {
@@ -50,7 +52,11 @@ const authProvider = {
 
     getIdentity: () => {
         try {
-            return Promise.resolve(JSON.parse(localStorage.getItem("identity")));
+            const identity = localStorage.getItem("identity");
+            
+            if (!identity) return Promise.reject();
+
+            return Promise.resolve(JSON.parse(identity));
         } catch {
             return Promise.reject();
         }
@@ -58,7 +64,12 @@ const authProvider = {
 
     getPermissions: () => {
         try {
-            const role = JSON.parse(localStorage.getItem("identity")).rol;
+            const identity = localStorage.getItem("identity");
+
+            if (!identity) return Promise.reject();
+
+            const role = JSON.parse(identity).rol;
+
             return role ? Promise.resolve(role) : Promise.reject();
         } catch {
             return Promise.reject();

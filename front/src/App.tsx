@@ -16,17 +16,33 @@ import { CeLayout } from "./layouts/CeLayout";
 export const App = () => {
     return (
         <Admin dataProvider={dataProvider} authProvider={authProvider}>
-            {permissions => (
-                <>
-                    {permissions === "ce" ? CeLayout() :
+            {permissions => {
+                if (!permissions) return null;
+
+                return (
+
+                    <>
                         <CustomRoutes>
-                            <Route path="/" element={<h1>More layouts needed!</h1>} />
+                            <Route path="/test" element={<h1>Test</h1>} />
                         </CustomRoutes>
-                    }
-                </>
-            )}
+                        {permissions === "ce" ? CeLayout() :
+                            <CustomRoutes>
+                                <Route path="/" element={<h1>More layouts needed!</h1>} />
+                            </CustomRoutes>
+                        }
+                    </>
+                )
+            }}
         </Admin>
     );
+
+    // return (
+    //     <Admin dataProvider={dataProvider} authProvider={authProvider}>
+    //         <CustomRoutes>
+    //             <Route path="/" element={<h1>More layouts needed!</h1>} />
+    //         </CustomRoutes>
+    //     </Admin>
+    // )
 };
 
 
