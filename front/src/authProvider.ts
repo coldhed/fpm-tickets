@@ -51,29 +51,13 @@ const authProvider : AuthProvider = {
     },
 
     getIdentity: () => {
-        try {
-            const identity = localStorage.getItem("identity");
-            
-            if (!identity) return Promise.reject();
-
-            return Promise.resolve(JSON.parse(identity));
-        } catch {
-            return Promise.reject();
-        }
+        const identity = JSON.parse(localStorage.getItem("identity") ?? "{}");
+        return identity ? Promise.resolve(identity) : Promise.reject();
     },
 
     getPermissions: () => {
-        try {
-            const identity = localStorage.getItem("identity");
-
-            if (!identity) return Promise.reject();
-
-            const role = JSON.parse(identity).rol;
-
-            return role ? Promise.resolve(role) : Promise.reject();
-        } catch {
-            return Promise.reject();
-        }
+        const role = JSON.parse(localStorage.getItem("identity") ?? "{}").rol;
+        return role ? Promise.resolve(role) : Promise.reject();
     },
 };
 
