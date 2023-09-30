@@ -1,7 +1,7 @@
 const authProvider = {
     // stores a function that does the login
     login: async ({ username, password }) => {
-        const request = new Request("http://127.0.0.1:4000/users/login", {
+        const request = new Request("http://127.0.0.1:4000/Usuarios/login", {
             method: "POST",
             body: JSON.stringify({ "correo": username, "contrasena": password }),
             headers: new Headers({ "Content-Type": "application/json" }),
@@ -11,8 +11,10 @@ const authProvider = {
             const response = await fetch(request);
 
             if (response.status == 200) {
-                localStorage.setItem("auth", response.token)
-                localStorage.setItem("identity", JSON.stringify({ "id": response.id, "fullName": response.fullName }))
+                let body = await response.json();
+
+                localStorage.setItem("auth", body.token)
+                localStorage.setItem("identity", JSON.stringify({ "id": body.id, "fullName": body.fullName, "rol": body.rol }))
                 return Promise.resolve();
             } else {
                 return Promise.reject();
@@ -55,7 +57,12 @@ const authProvider = {
     },
 
     getPermissions: () => {
-        return Promise.resolve()
+        try {
+            const role = JSON.parse(localStorage.getItem("identity")).rol;
+            return role ? Promise.resolve(role) : Promise.reject();
+        } catch {
+            return Promise.reject();
+        }
     },
 };
 
