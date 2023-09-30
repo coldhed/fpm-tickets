@@ -14,41 +14,21 @@ import authProvider from "./authProvider";
 import { TicketList } from "./elements/TicketList";
 
 import { CeLayout } from "./layouts/CeLayout";
+import { CaLayout } from "./layouts/CaLayout";
 
 
 export const App = () => (
-    <Admin dataProvider={dataProvider} authProvider={authProvider}>
-        {permissions => {
 
-            return (
-                <>
-                    <CustomRoutes>
-                        <Route path="/test" element={<h1>Test</h1>} />
-                    </CustomRoutes>
-                    {permissions === "ce" ? CeLayout() :
-                        <CustomRoutes>
-                            <Route path="/" element={<h1>More layouts needed!</h1>} />
-                        </CustomRoutes>
-                    }
-                </>
-            )
+    <Admin dataProvider={dataProvider} authProvider={authProvider} >
+        {permissions => {
+            if (!permissions) {
+                console.log("No permissions")
+                return null;
+            }
+
+            if (permissions === "ce") return CeLayout();
+
+            return CaLayout();
         }}
     </Admin>
 );
-
-
-
-
-// export const App = () => {
-//     return (
-//         <Admin dataProvider={dataProvider} authProvider={authProvider}>
-//             <Resource name="posts" list={ListGuesser} />
-//             <Resource
-//                 name="ticket"
-//                 list={TicketList}
-//             />
-//         </Admin>
-//     );
-// };
-
-

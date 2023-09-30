@@ -12,7 +12,9 @@ router.post("ruta", async (request, response) => {
 */
 
 //getList, getMany, getManyReference
-router.get("/ticket", async (req, res) => {
+router.get("/", async (req, res) => {
+    let db = await connectDB();
+
     if ("_sort" in req.query) { //List -> Datos ordenadoa
         let sortBy = req.query._sort;
         let sortOrder = req.query._order == "ASC" ? 1 : -1; //ASCENDENTE O DESCENDENTE
@@ -23,7 +25,7 @@ router.get("/ticket", async (req, res) => {
         let sorter = {} // no puedo aladir un avariable como nombre salvo así
         sorter[sortBy] = sortOrder
 
-        let data = await db.colection("Tickets").find({}).sort(sorter).project({ _id: 0 }).toArray();
+        let data = await db.collection("Tickets").find({}).sort(sorter).project({ _id: 0 }).toArray();
 
         res.set("Access-Control-Expose-Headers", "X-Total-Count"); //los headers de la respuesta
         res.set("X-Total-Count", data.length);
@@ -50,7 +52,9 @@ router.get("/ticket", async (req, res) => {
 })
 
 //getOne
-router.get("/tickets/:id", async (request, response) => {
+router.get("/:id", async (request, response) => {
+    let db = await connectDB();
+
     let data = await db.collection('Tickets').find({ "id": Number(request.params.id) }).project({ _id: 0 }).toArray();
     response.json(data[0]);
 })
@@ -58,7 +62,9 @@ router.get("/tickets/:id", async (request, response) => {
 
 
 //create
-router.post("/tickets", async (request, response) => {
+router.post("/", async (request, response) => {
+    let db = await connectDB();
+
     let addValue = request.body
     let data = await db.collection('Tickets').find({}).toArray();
     let id = data.length + 1;
@@ -68,7 +74,9 @@ router.post("/tickets", async (request, response) => {
 })
 
 //update
-router.put("/tickets/:id", async (request, response) => {
+router.put("/:id", async (request, response) => {
+    let db = await connectDB();
+
     let addValue = request.body
     addValue["id"] = Number(request.params.id);
     let data = await db.collection("Tickets").updateOne({ "id": addValue["id"] }, { "$set": addValue });
@@ -77,7 +85,9 @@ router.put("/tickets/:id", async (request, response) => {
 })
 
 //delete
-router.delete("/tickets/:id", async (request, response) => {
+router.delete("/:id", async (request, response) => {
+    let db = await connectDB();
+
     let data = await db.collection('Tickets').deleteOne({ "id": Number(request.params.id) });
     response.json(data);
 })
