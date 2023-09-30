@@ -4,10 +4,7 @@ import { MongoClient } from 'mongodb'
 let db;
 
 async function connectDB() {
-    if (db) {
-        console.log("db just returned")
-        return db;
-    }
+    if (db) return db;
 
     let client = new MongoClient(process.env.MONGODB_URI)
 
