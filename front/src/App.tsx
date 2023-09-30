@@ -11,6 +11,8 @@ import {
 import { Route } from 'react-router-dom';
 import { dataProvider } from "./dataProvider";
 import authProvider from "./authProvider";
+import { TicketList } from "./ticket";
+
 import { CeLayout } from "./layouts/CeLayout";
 
 
@@ -41,5 +43,19 @@ export const App = () => (
     </Admin>
 );
 
+
+
+
+// export const App = () => {
+//     return (
+//         <Admin dataProvider={dataProvider} authProvider={authProvider}>
+//             <Resource name="posts" list={ListGuesser} />
+//             <Resource
+//                 name="ticket"
+//                 list={TicketList}
+//             />
+//         </Admin>
+//     );
+// };
 
 
