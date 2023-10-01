@@ -4,20 +4,35 @@ import {
     ListGuesser,
     EditGuesser,
     ShowGuesser,
+    usePermissions,
+    CustomRoutes,
+    useLogout,
 } from "react-admin";
+import { Route } from 'react-router-dom';
 import { dataProvider } from "./dataProvider";
 import authProvider from "./authProvider";
-import { TicketList } from "./ticket";
+import { TicketList } from "./elements/TicketList";
 
-export const App = () => {
-    return (
-        <Admin dataProvider={dataProvider} authProvider={authProvider}>
-            <Resource name="posts" list={ListGuesser} />
-            <Resource
-                name="ticket"
-                list={TicketList}
-            />
-        </Admin>
-    );
-};
+import { CeLayout } from "./layouts/CeLayout";
+import { CaLayout } from "./layouts/CaLayout";
+
+
+export const App = () => (
+
+    <Admin dataProvider={dataProvider} authProvider={authProvider} >
+        {permissions => {
+            if (permissions === "no role") {
+                console.log("No permissions")
+                return (
+                    // PREGUNTAR DE ESTO A JORGE
+                    CaLayout()
+                );
+            }
+
+            if (permissions === "ce") return CeLayout();
+
+            return CaLayout();
+        }}
+    </Admin>
+);
 

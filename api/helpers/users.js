@@ -1,4 +1,5 @@
 import { connectDB } from "../db.js";
+import { ObjectId } from "mongodb";
 import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken';
 
@@ -34,7 +35,6 @@ async function createNewUser(email, fullName, password, rol) {
 }
 
 async function doLogin(req, res) {
-    console.log("Login request");
     let email = req.body.correo;
     let password = req.body.contrasena;
 
@@ -70,7 +70,8 @@ async function doLogin(req, res) {
             res.json({
                 "token": token,
                 "id": email,
-                "fullName": user.nombre_completo
+                "fullName": user.nombre_completo,
+                "rol": user.rol,
             });
         } else {
             // wrong password
@@ -78,4 +79,72 @@ async function doLogin(req, res) {
         }
     });
 }
-export { createNewUser, doLogin };
+
+// endpoint to get all users
+async function getMany(req, res) {
+    const { _sort, _order, _start, _end, id } = req.query;
+
+    let db = await connectDB();
+
+    let users = [];
+
+    if (id) {
+        for (let i = 0; i < id.length; i++) {
+            let user = await db.collection("Usuarios").findOne({ "correo": id[i] }, { projection: { contrasena: 0, id: 0 } });
+            if (user) users.push(user);
+        }
+    } else {
+        let sorter = {};
+
+        if (_sort && _order) {
+            sorter[_sort] = _order;
+        }
+
+        users = await db.collection("Usuarios").find({}).sort(sorter).project({ contrasena: 0, _id: 0 }).toArray();
+
+        // set headers needed for amount of data -> react-admin needs this
+        res.set('Access-Control-Expose-Headers', 'X-Total-Count')
+        res.set('X-Total-Count', users.length)
+
+        // slice if applicable
+        if (_start && _end) {
+            users = users.slice(_start, _end);
+        }
+    }
+
+
+    // parse data
+    for (let i = 0; i < users.length; i++) {
+        // RA asks for an id field
+        users[i]["id"] = users[i]["correo"];
+
+        // if the user is a coordinador de aula, get their coordinators mail
+        if (users[i]["rol"] == "ca" && users[i]["coor_nac"] != null) {
+            let coordinador = await db.collection("Usuarios").findOne({ "_id": new ObjectId(users[i]["coor_nac"]) }, { projection: { "correo": 1, "_id": 0 } });
+
+            if (coordinador != null) users[i]["coor_nac"] = coordinador["correo"];
+        }
+
+
+        // Change the role to a more readable format
+        let role = users[i]["rol"];
+        switch (role) {
+            case "ce":
+                users[i]["rol"] = "Coordinador Ejecutivo";
+                break;
+
+            case "cn":
+                users[i]["rol"] = "Coordinador Nacional";
+                break;
+
+            case "ca":
+                users[i]["rol"] = "Coordinador de Aula";
+                break;
+        }
+
+    }
+
+    res.json(users);
+};
+
+export { createNewUser, doLogin, getMany };

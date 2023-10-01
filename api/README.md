@@ -8,7 +8,7 @@ Este es el API para el sistema de tickets de la Fundación por México. La base 
 
 ### Usuarios 
 
-Endpoints para el manejo de usuarios del sistema. Dirección desde root: /users
+Endpoints para el manejo de usuarios del sistema. Dirección desde root: /Usuarios
 
 **/newUser | Post**
 Espera un JSON con las siguientes llaves: correo, nombre_completo, contrasena, rol. Regresa el estado 201 en caso de haber creado el usuario correctamente.
