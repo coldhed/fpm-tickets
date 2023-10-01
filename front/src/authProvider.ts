@@ -57,7 +57,7 @@ const authProvider : AuthProvider = {
 
     getPermissions: () => {
         const role = JSON.parse(localStorage.getItem("identity") ?? "{}").rol;
-        return role ? Promise.resolve(role) : Promise.reject();
+        return role ? Promise.resolve(role) : Promise.resolve("no role");
     },
 };
 

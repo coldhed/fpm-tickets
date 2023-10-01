@@ -21,9 +21,12 @@ export const App = () => (
 
     <Admin dataProvider={dataProvider} authProvider={authProvider} >
         {permissions => {
-            if (!permissions) {
+            if (permissions === "no role") {
                 console.log("No permissions")
-                return null;
+                return (
+                    // PREGUNTAR DE ESTO A JORGE
+                    CaLayout()
+                );
             }
 
             if (permissions === "ce") return CeLayout();
@@ -32,3 +35,4 @@ export const App = () => (
         }}
     </Admin>
 );
+
