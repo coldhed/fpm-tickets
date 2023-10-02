@@ -63,12 +63,13 @@ router.get("/:id", async (request, response) => {
 
 //create
 router.post("/", async (request, response) => {
-    let db = await connectDB();
+    // console.log(request.body)
 
+    let db = await connectDB();
     let addValue = request.body
-    let data = await db.collection('Tickets').find({}).toArray();
-    let id = data.length + 1;
-    addValue["id"] = id;
+    // let data = await db.collection('Tickets').find({}).toArray();
+    //let id = data.length + 1;
+    //addValue["id"] = id;
     data = await db.collection('Tickets').insertOne(addValue);
     response.json(data);
 })
