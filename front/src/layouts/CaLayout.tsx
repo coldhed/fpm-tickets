@@ -5,7 +5,7 @@ import {
     EditGuesser,
     ShowGuesser,
 } from "react-admin";
-import { TicketList } from "../elements/TicketList";
+import { TicketList } from "../elements/Tickets";
 
 export const CaLayout = () => {
     return (
