@@ -17,12 +17,12 @@ const router = Router();
 router.get("/", async (req, res) => {
 
     try {
-        let token = req.get("Authentication");
-        let verifiedToken = jwt.verify(token, process.env.JWT_SECRET);
+        // let token = req.get("Authentication");
+        // let verifiedToken = jwt.verify(token, process.env.JWT_SECRET);
 
-        if (verifiedToken.rol != "ce") {
-            return res.sendStatus(401);
-        }
+        // if (verifiedToken.rol != "ce") {
+        //     return res.sendStatus(401);
+        // }
 
         await getMany(req, res);
     } catch {

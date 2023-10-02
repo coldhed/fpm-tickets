@@ -90,7 +90,7 @@ async function getMany(req, res) {
 
     if (id) {
         for (let i = 0; i < id.length; i++) {
-            let user = await db.collection("Usuarios").findOne({ "correo": id[i] }, { projection: { contrasena: 0, id: 0 } });
+            let user = await db.collection("Usuarios").findOne({ "_id": new ObjectId(id[i]) }, { projection: { contrasena: 0, id: 0 } });
             if (user) users.push(user);
         }
     } else {
@@ -100,7 +100,7 @@ async function getMany(req, res) {
             sorter[_sort] = _order;
         }
 
-        users = await db.collection("Usuarios").find({}).sort(sorter).project({ contrasena: 0, _id: 0 }).toArray();
+        users = await db.collection("Usuarios").find({}).sort(sorter).project({ contrasena: 0 }).toArray();
 
         // set headers needed for amount of data -> react-admin needs this
         res.set('Access-Control-Expose-Headers', 'X-Total-Count')
@@ -116,7 +116,8 @@ async function getMany(req, res) {
     // parse data
     for (let i = 0; i < users.length; i++) {
         // RA asks for an id field
-        users[i]["id"] = users[i]["correo"];
+        users[i]["id"] = users[i]["_id"];
+        delete users[i]["_id"];
 
         // if the user is a coordinador de aula, get their coordinators mail
         if (users[i]["rol"] == "ca" && users[i]["coor_nac"] != null) {
