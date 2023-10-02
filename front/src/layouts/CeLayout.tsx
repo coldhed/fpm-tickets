@@ -6,7 +6,7 @@ import {
     ShowGuesser,
 } from "react-admin";
 import { UserList } from "../elements/UserList";
-import { TicketList } from "../elements/TicketList";
+import { TicketList } from "../elements/Tickets";
 
 export const CeLayout = () => {
     return (
