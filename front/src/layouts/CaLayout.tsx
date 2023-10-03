@@ -6,7 +6,7 @@ import {
     ShowGuesser,
 } from "react-admin";
 
-import { TicketList } from "../elements/Tickets";
+import { TicketList } from "../elements/TicketsList";
 import { TicketCreate } from "../elements/TicketCreate";
 import { TicketEdit } from "../elements/TicketUpdate";
 

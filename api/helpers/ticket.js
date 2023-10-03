@@ -25,4 +25,6 @@ async function createNewTicket(titulo, categoria, aula, prioridad, resolucion, e
 
 }
 
+
+
 export { createNewTicket };

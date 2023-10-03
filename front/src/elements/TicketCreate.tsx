@@ -56,9 +56,9 @@ export const TicketCreate = () => (
             source="prioridad"
             className="full-width-input"
             choices={[
-              { id: 'a', name: 'Alta' },
-              { id: 'm', name: 'Media' },
-              { id: 'b', name: 'Baja' },
+              { id: 'Alta', name: 'Alta' },
+              { id: 'Media', name: 'Media' },
+              { id: 'Baja', name: 'Baja' },
             ]}
             validate={[required('Campo Obligatorio')]}
           />
@@ -68,9 +68,9 @@ export const TicketCreate = () => (
             source="estatus"
             className="full-width-input"
             choices={[
-              { id: 'ab', name: 'Abierto' },
-              { id: 'ep', name: 'En proceso' },
-              { id: 'fi', name: 'Finalizado' },
+              { id: 'Abierto', name: 'Abierto' },
+              { id: 'En proceso', name: 'En proceso' },
+              { id: 'Finalizado', name: 'Finalizado' },
             ]}
             validate={[required('Campo Obligatorio')]}
           />
