@@ -14,6 +14,7 @@ router.post("ruta", async (request, response) => {
 //getList, getMany, getManyReference
 router.get("/", async (req, res) => {
     let db = await connectDB();
+    let data = [];
 
     if ("_sort" in req.query) { //List -> Datos ordenadoa
         let sortBy = req.query._sort;
@@ -25,38 +26,41 @@ router.get("/", async (req, res) => {
         let sorter = {} // no puedo aladir un avariable como nombre salvo así
         sorter[sortBy] = sortOrder
 
-        let data = await db.collection("Tickets").find({}).sort(sorter).project({ _id: 0 }).toArray();
+        data = await db.collection("Tickets").find({}).sort(sorter).project({ }).toArray();
 
         res.set("Access-Control-Expose-Headers", "X-Total-Count"); //los headers de la respuesta
         res.set("X-Total-Count", data.length);
 
         data = data.slice(start, end); //para partirla
 
-        res.json(data);
     } else if ("id" in req.query) { //Many -> Datos con ciertos id
 
-        let data = [] //leemos toda la info
 
         for (let index = 0; index < request.query.id.length; index++) { //recorremos el array de ids
-            let dataObtain = await db.collection('Tickets').find({ id: Number(request.query.id[index]) }).project({ _id: 0 }).toArray(); // sacamos el valor del index y luego la proyección
+            let dataObtain = await db.collection('Tickets').find({ id: Number(request.query.id[index]) }).project({ }).toArray(); // sacamos el valor del index y luego la proyección
             data = await data.concat(dataObtain)
         }
-        response.json(data);
+        
     } else { //Reference -> datos que me pide el query 
-        let data = []
-        data = await db.collection('tickets').find(request.query).project({ _id: 0 }).toArray();
-        response.set('Access-Control-Expose-Headers', 'X-Total-Count')
-        response.set('X-Total-Count', data.length)
-        response.json(data)
+        
+        data = await db.collection('tickets').find(request.query).project({ }).toArray();
+        res.set('Access-Control-Expose-Headers', 'X-Total-Count')
+        res.set('X-Total-Count', data.length)
     }
+    for (let i = 0; i < data.length; i++) {
+        data[i]["id"] = data[i]["_id"];
+    }
+
+
+    res.json(data);
 })
 
 //getOne
-router.get("/:id", async (request, response) => {
+router.get("/:id", async (request, res) => {
     let db = await connectDB();
 
     let data = await db.collection('Tickets').find({ "id": Number(request.params.id) }).project({ _id: 0 }).toArray();
-    response.json(data[0]);
+    res.json(data[0]);
 })
 
 
@@ -67,10 +71,11 @@ router.post("/", async (request, response) => {
 
     let db = await connectDB();
     let addValue = request.body
+    addValue["inicio"] = Date();
     // let data = await db.collection('Tickets').find({}).toArray();
-    //let id = data.length + 1;
-    //addValue["id"] = id;
-    data = await db.collection('Tickets').insertOne(addValue);
+    // let id = data.length + 1;
+    // addValue["id"] = id;
+   let data = await db.collection('Tickets').insertOne(addValue);
     response.json(data);
 })
 

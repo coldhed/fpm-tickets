@@ -7,7 +7,7 @@ import {
 } from "react-admin";
 import { UserList } from "../elements/UserList";
 
-import { TicketList } from "../elements/Tickets";
+import { TicketList } from "../elements/TicketsList";
 import { TicketCreate } from "../elements/TicketCreate";
 import { TicketEdit } from "../elements/TicketUpdate";
 
