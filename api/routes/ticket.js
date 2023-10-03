@@ -86,8 +86,14 @@ router.put("/:id", async (request, response) => {
     let addValue = request.body
     addValue["id"] = Number(request.params.id);
     let data = await db.collection("Tickets").updateOne({ "id": addValue["id"] }, { "$set": addValue });
-    data = await db.collection('Tickets').find({ "id": Number(request.params.id) }).project({ _id: 0, id: 1, nombre: 1, materia: 1 }).toArray();
-    response.json(data[0]);
+    data = await db.collection('Tickets').find({ "id": Number(request.params.id) }).project({ }).toArray();
+    //response.json(data[0]);
+    for (let i = 0; i < data.length; i++) {
+        data[i]["id"] = data[i]["_id"];
+    }
+
+
+    res.json(data);
 })
 
 //delete
