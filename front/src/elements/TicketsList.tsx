@@ -6,7 +6,7 @@ import Visibility from "@mui/icons-material/Visibility";
 const CustomEditButton = () => (
     <EditButton
         label="Visualizar Ticket" 
-        icon={<Visibility />}
+        icon={<Visibility/>}
     />
 );
 
