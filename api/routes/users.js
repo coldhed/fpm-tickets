@@ -17,12 +17,12 @@ const router = Router();
 router.get("/", async (req, res) => {
 
     try {
-        // let token = req.get("Authentication");
-        // let verifiedToken = jwt.verify(token, process.env.JWT_SECRET);
+        let token = req.get("Authentication");
+        let verifiedToken = jwt.verify(token, process.env.JWT_SECRET);
 
-        // if (verifiedToken.rol != "ce") {
-        //     return res.sendStatus(401);
-        // }
+        if (verifiedToken.rol != "ce") {
+            return res.sendStatus(401);
+        }
 
         await getMany(req, res);
     } catch {
@@ -31,15 +31,10 @@ router.get("/", async (req, res) => {
     }
 });
 
-router.post("/newUser", async (req, res) => {
-    let email = req.body.correo;
-    let fullName = req.body.nombre_completo;
-    let password = req.body.contrasena;
-    let rol = req.body.rol;
+// create a user
+router.post("/", async (req, res) => {
 
-    const status = await createNewUser(email, fullName, password, rol);
-
-    res.sendStatus(status);
+    await createNewUser(req, res);
 })
 
 router.post("/login", async (req, res) => {

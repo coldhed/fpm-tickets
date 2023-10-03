@@ -3,34 +3,50 @@ import { ObjectId } from "mongodb";
 import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken';
 
-async function createNewUser(email, fullName, password, rol) {
-    // check if a user with that email already exists
+async function createNewUser(req, res) {
     let db = await connectDB();
 
-    let oldUser = await db.collection("Usuarios").findOne({ "correo": email });
+    let newUser = req.body;
+    newUser["last_login"] = Date();
+
+    if (newUser.rol == "ca") {
+        let coor_nac = req.body.coor_nac;
+
+        if (coor_nac) {
+            let cn_data = await db.collection("Usuarios").findOne({ "_id": new ObjectId(coor_nac) });
+
+            if (cn_data && cn_data.rol == "cn") {
+                newUser["coor_nac"] = coor_nac;
+            } else {
+                return res.sendStatus(400);
+            }
+        } else {
+            // if you are creating a coor_aula you need to specity their coor_nac
+            return res.sendStatus(400);
+        }
+    }
+
+
+    // check if a user with that email already exists
+    let oldUser = await db.collection("Usuarios").findOne({ "correo": newUser.email });
 
     if (oldUser === null) {
 
         // hash the password
         try {
             const salt = await bcrypt.genSalt(10);
-            const hash = await bcrypt.hash(password, salt);
+            const hash = await bcrypt.hash(newUser.contrasena, salt);
 
-            let newUser = {
-                "correo": email,
-                "nombre_completo": fullName,
-                "contrasena": hash,
-                "last_login": Date(),
-                "rol": rol,
-            };
-            await db.collection("Usuarios").insertOne(newUser);
-            return 201;
+            newUser["contrasena"] = hash;
+
+            let data = await db.collection("Usuarios").insertOne(newUser);
+            return res.json(data);
         } catch {
             console.log("Problem hashing the password");
-            return 500;
+            return res.sendStatus(500);
         }
     } else { // repeated user
-        return 409;
+        return res.sendStatus(409);
     }
 }
 
