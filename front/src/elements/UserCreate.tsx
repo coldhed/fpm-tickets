@@ -14,6 +14,7 @@ export const UserCreate = (props: any) => {
     async function fetchCoor_nac() {
         const request = new Request("http://127.0.0.1:4000/Usuarios/cn", {
             method: "GET",
+            headers: new Headers({ Authentication: localStorage.getItem("auth") as string }),
         });
 
         try {

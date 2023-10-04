@@ -33,8 +33,19 @@ router.get("/", async (req, res) => {
 
 // create a user
 router.post("/", async (req, res) => {
+    try {
+        let token = req.get("Authentication");
+        let verifiedToken = jwt.verify(token, process.env.JWT_SECRET);
 
-    await createNewUser(req, res);
+        if (verifiedToken.rol != "ce") {
+            return res.sendStatus(401);
+        }
+
+        await createNewUser(req, res);
+    } catch {
+        // auth failed
+        res.sendStatus(401);
+    }
 })
 
 // login
@@ -44,7 +55,19 @@ router.post("/login", async (req, res) => {
 
 // get coor_nac
 router.get("/cn", async (req, res) => {
-    await getCNs(req, res);
+    try {
+        let token = req.get("Authentication");
+        let verifiedToken = jwt.verify(token, process.env.JWT_SECRET);
+
+        if (verifiedToken.rol != "ce") {
+            return res.sendStatus(401);
+        }
+
+        await getCNs(req, res);
+    } catch {
+        // auth failed
+        res.sendStatus(401);
+    }
 })
 
 
