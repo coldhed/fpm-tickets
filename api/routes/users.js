@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { connectDB } from '../db.js';
-import { createNewUser, doLogin, getMany, getCNs } from '../helpers/users.js';
+import { createNewUser, doLogin, getMany, getCNs, deleteUser } from '../helpers/users.js';
 import jwt from 'jsonwebtoken';
 
 const router = Router();
@@ -14,6 +14,7 @@ const router = Router();
 //     response.json(data);
 // })
 
+// get many, get one
 router.get("/", async (req, res) => {
 
     try {
@@ -46,6 +47,11 @@ router.post("/", async (req, res) => {
         // auth failed
         res.sendStatus(401);
     }
+})
+
+// delete a user
+router.delete("/:id", async (req, res) => {
+    await deleteUser(req, res);
 })
 
 // login

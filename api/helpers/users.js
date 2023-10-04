@@ -2,6 +2,7 @@ import { connectDB } from "../db.js";
 import { ObjectId } from "mongodb";
 import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken';
+import { json } from "express";
 
 async function createNewUser(req, res) {
     let db = await connectDB();
@@ -180,4 +181,18 @@ async function getCNs(req, res) {
     res.json(users);
 }
 
-export { createNewUser, doLogin, getMany, getCNs };
+async function deleteUser(req, res) {
+    let db = await connectDB();
+
+    let user = await db.collection("Usuarios").findOne({ "_id": new ObjectId(req.params.id) });
+
+    if (user == null) {
+        return res.sendStatus(404);
+    }
+
+    let data = await db.collection("Usuarios").deleteOne({ "_id": new ObjectId(req.params.id) });
+
+    return res.json(data);
+}
+
+export { createNewUser, doLogin, getMany, getCNs, deleteUser };

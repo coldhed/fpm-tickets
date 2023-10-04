@@ -1,4 +1,4 @@
-import { Datagrid, List, ReferenceField, TextField, EmailField, usePermissions, useLogout, CreateButton, TopToolbar, ExportButton } from 'react-admin';
+import { Datagrid, List, ReferenceField, TextField, EmailField, usePermissions, useLogout, CreateButton, TopToolbar, ExportButton, DeleteButton } from 'react-admin';
 
 const ListActions = () => (
     <TopToolbar>
