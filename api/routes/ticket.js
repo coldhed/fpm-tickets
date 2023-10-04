@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { connectDB } from '../db.js';
 import { createNewTicket } from '../helpers/ticket.js';
+import { ObjectId } from 'mongodb';
 
 
 const router = Router();
@@ -37,7 +38,7 @@ router.get("/", async (req, res) => {
 
 
         for (let index = 0; index < request.query.id.length; index++) { //recorremos el array de ids
-            let dataObtain = await db.collection('Tickets').find({ id: Number(request.query.id[index]) }).project({ }).toArray(); // sacamos el valor del index y luego la proyección
+            let dataObtain = await db.collection('Tickets').find({ _id: new ObjectId(request.query.id[index]) }).project({ }).toArray(); // sacamos el valor del index y luego la proyección
             data = await data.concat(dataObtain)
         }
         
@@ -59,8 +60,11 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (request, res) => {
     let db = await connectDB();
 
-    let data = await db.collection('Tickets').find({ "id": Number(request.params.id) }).project({ _id: 0 }).toArray();
-    res.json(data[0]);
+    let data = await db.collection('Tickets').findOne({ "_id": new ObjectId(request.params.id) });
+    data["id"] = data["_id"];
+    delete data["_id"];
+
+    res.json(data);
 })
 
 
@@ -92,7 +96,6 @@ router.put("/:id", async (request, response) => {
         data[i]["id"] = data[i]["_id"];
     }
 
-
     res.json(data);
 })
 
@@ -104,17 +107,7 @@ router.delete("/:id", async (request, response) => {
     response.json(data);
 })
 
-router.post("/newTicket", async (req, res) => {
-    let email = req.body.correo;
-    let username = req.body.nombre_de_usuario;
-    let fullName = req.body.nombre_completo;
-    let password = req.body.contrasena;
-    let rol = req.body.rol;
 
-    const status = await createNewTicket(titulo, categoria, aula, prioridad, resolucion, estatus);
-
-    res.sendStatus(status);
-})
 
 
 export default router;
