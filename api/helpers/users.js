@@ -162,6 +162,22 @@ async function getMany(req, res) {
     }
 
     res.json(users);
-};
+}
 
-export { createNewUser, doLogin, getMany };
+async function getCNs(req, res) {
+    let db = await connectDB();
+
+    let users = await db.collection("Usuarios").find({ "rol": "cn" }).project({ _id: 1, correo: 1 }).toArray();
+
+    users.map((user) => {
+        user["id"] = user["_id"];
+        delete user["_id"];
+
+        user["name"] = user["correo"];
+        delete user["correo"];
+    })
+
+    res.json(users);
+}
+
+export { createNewUser, doLogin, getMany, getCNs };

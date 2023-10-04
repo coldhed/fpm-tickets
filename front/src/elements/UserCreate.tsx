@@ -1,9 +1,40 @@
-import { Create, FormDataConsumer, SelectInput, SimpleForm, TextInput, required } from "react-admin";
+import { useEffect, useState } from "react";
+import { Create, CreateButton, FormDataConsumer, SaveButton, SelectInput, SimpleForm, TextInput, Toolbar, required } from "react-admin";
+
+const CreateToolbar = (props: any) => (
+    <Toolbar {...props}>
+        <SaveButton label="Crear Usuario" />
+    </Toolbar>
+)
 
 export const UserCreate = (props: any) => {
+    const [coor_nac, setCoor_nac] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    async function fetchCoor_nac() {
+        const request = new Request("http://127.0.0.1:4000/Usuarios/cn", {
+            method: "GET",
+        });
+
+        try {
+            let response = await fetch(request);
+
+            let data = await response.json();
+
+            setCoor_nac(data);
+            setIsLoading(false);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        fetchCoor_nac();
+    })
+
     return (
         <Create {...props}>
-            <SimpleForm>
+            <SimpleForm toolbar={<CreateToolbar />}>
                 <TextInput source="nombre_completo" label="Nombre Completo" />
                 <TextInput source="correo" label="Correo" />
                 <TextInput source="contrasena" label="Contraseña" />
@@ -15,7 +46,13 @@ export const UserCreate = (props: any) => {
                 <FormDataConsumer>
                     {({ formData, ...rest }) => {
                         return (
-                            <TextInput source="coor_nac" label="Coordinador Nacional" disabled={formData.rol !== 'ca'} />
+                            <SelectInput
+                                source="coor_nac"
+                                label="Coordinador Nacional"
+                                disabled={formData.rol !== 'ca'}
+                                isLoading={isLoading}
+                                choices={formData.rol === 'ca' ? coor_nac : []}
+                            />
                         );
                     }}
                 </FormDataConsumer>

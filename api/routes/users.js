@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { connectDB } from '../db.js';
-import { createNewUser, doLogin, getMany } from '../helpers/users.js';
+import { createNewUser, doLogin, getMany, getCNs } from '../helpers/users.js';
 import jwt from 'jsonwebtoken';
 
 const router = Router();
@@ -37,8 +37,14 @@ router.post("/", async (req, res) => {
     await createNewUser(req, res);
 })
 
+// login
 router.post("/login", async (req, res) => {
     await doLogin(req, res);
+})
+
+// get coor_nac
+router.get("/cn", async (req, res) => {
+    await getCNs(req, res);
 })
 
 
