@@ -20,7 +20,7 @@ export const UserShow = () => (
             <TextField source="rol" />
 
             <Stack direction="row" spacing={10}>
-                <ListButton label="Regresar" icon={<ArrowBack />} />
+                <ListButton label="Regresar" icon={<ArrowBack />} color="inherit" />
                 <DeleteWithConfirmButton label="Borrar" />
             </Stack>
         </SimpleShowLayout>
