@@ -5,10 +5,20 @@ import {
     EditGuesser,
     ShowGuesser,
 } from "react-admin";
-import { TicketList } from "../elements/TicketList";
+
+import { TicketList } from "../elements/TicketsList";
+import { TicketCreate } from "../elements/TicketCreate";
+import { TicketEdit } from "../elements/TicketUpdate";
 
 export const CaLayout = () => {
     return (
-        <Resource name="Tickets" list={TicketList} />
+        <>
+            <Resource
+                name="Tickets"
+                list={TicketList}
+                create={TicketCreate}
+                edit={TicketEdit}
+            />
+        </>
     );
 };

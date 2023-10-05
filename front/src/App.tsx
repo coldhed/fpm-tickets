@@ -11,15 +11,19 @@ import {
 import { Route } from 'react-router-dom';
 import { dataProvider } from "./dataProvider";
 import authProvider from "./authProvider";
-import { TicketList } from "./elements/TicketList";
+
+
+import myTheme from "./myTheme";
+
 
 import { CeLayout } from "./layouts/CeLayout";
 import { CaLayout } from "./layouts/CaLayout";
 
 
+
 export const App = () => (
 
-    <Admin dataProvider={dataProvider} authProvider={authProvider} >
+    <Admin dataProvider={dataProvider} authProvider={authProvider} theme={myTheme} >
         {permissions => {
             // if there are no permissions, you return the CaLayout 
             // and since you are not logged-in it will take you to the login page
