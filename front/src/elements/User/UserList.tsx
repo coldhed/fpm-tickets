@@ -1,4 +1,4 @@
-import { Datagrid, List, ReferenceField, TextField, EmailField, usePermissions, useLogout, CreateButton, TopToolbar, ExportButton, DeleteButton } from 'react-admin';
+import { Datagrid, List, ReferenceField, TextField, EmailField, usePermissions, useLogout, CreateButton, TopToolbar, ExportButton, DeleteButton, ShowButton } from 'react-admin';
 
 const ListActions = () => (
     <TopToolbar>
@@ -15,6 +15,7 @@ export const UserList = () => {
                 <EmailField source="correo" label="Correo" />
                 <TextField source="rol" label="Rol" />
                 <EmailField source="coor_nac" label="Coordinador Nacional" />
+                <ShowButton label="Ver usuario" />
             </Datagrid>
         </List>
     );
