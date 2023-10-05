@@ -10,7 +10,7 @@ const ListActions = () => (
 export const UserList = () => {
     return (
         <List actions={<ListActions />}>
-            <Datagrid rowClick="edit">
+            <Datagrid rowClick="show">
                 <TextField source="nombre_completo" label="Nombre Completo" />
                 <EmailField source="correo" label="Correo" />
                 <TextField source="rol" label="Rol" />
