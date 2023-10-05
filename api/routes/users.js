@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { connectDB } from '../db.js';
-import { createNewUser, doLogin, getMany } from '../helpers/users.js';
+import { createNewUser, doLogin, getMany, getCNs, deleteUser, getOne } from '../helpers/users.js';
 import jwt from 'jsonwebtoken';
 
 const router = Router();
@@ -13,9 +13,24 @@ const router = Router();
 
 //     response.json(data);
 // })
+router.get("/cn", async (req, res) => {
+    try {
+        let token = req.get("Authentication");
+        let verifiedToken = jwt.verify(token, process.env.JWT_SECRET);
 
+        if (verifiedToken.rol != "ce") {
+            return res.sendStatus(401);
+        }
+
+        await getCNs(req, res);
+    } catch {
+        // auth failed
+        res.sendStatus(401);
+    }
+})
+
+// get many
 router.get("/", async (req, res) => {
-
     try {
         let token = req.get("Authentication");
         let verifiedToken = jwt.verify(token, process.env.JWT_SECRET);
@@ -31,20 +46,63 @@ router.get("/", async (req, res) => {
     }
 });
 
-router.post("/newUser", async (req, res) => {
-    let email = req.body.correo;
-    let fullName = req.body.nombre_completo;
-    let password = req.body.contrasena;
-    let rol = req.body.rol;
+// get one
+router.get("/:id", async (req, res) => {
+    try {
+        let token = req.get("Authentication");
+        let verifiedToken = jwt.verify(token, process.env.JWT_SECRET);
 
-    const status = await createNewUser(email, fullName, password, rol);
+        if (verifiedToken.rol != "ce") {
+            return res.sendStatus(401);
+        }
 
-    res.sendStatus(status);
+        await getOne(req, res);
+    } catch {
+        // auth failed
+        res.sendStatus(401);
+    }
+});
+
+// create a user
+router.post("/", async (req, res) => {
+    try {
+        let token = req.get("Authentication");
+        let verifiedToken = jwt.verify(token, process.env.JWT_SECRET);
+
+        if (verifiedToken.rol != "ce") {
+            return res.sendStatus(401);
+        }
+
+        await createNewUser(req, res);
+    } catch {
+        // auth failed
+        res.sendStatus(401);
+    }
 })
 
+// delete a user
+router.delete("/:id", async (req, res) => {
+    try {
+        let token = req.get("Authentication");
+        let verifiedToken = jwt.verify(token, process.env.JWT_SECRET);
+
+        if (verifiedToken.rol != "ce") {
+            return res.sendStatus(401);
+        }
+
+        await deleteUser(req, res);
+    } catch {
+        // auth failed
+        res.sendStatus(401);
+    }
+})
+
+// login
 router.post("/login", async (req, res) => {
     await doLogin(req, res);
 })
+
+// get coor_nac
 
 
 export default router;

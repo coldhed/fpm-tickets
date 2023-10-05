@@ -22,22 +22,17 @@ import { CaLayout } from "./layouts/CaLayout";
 
 
 export const App = () => (
-    
+
     <Admin dataProvider={dataProvider} authProvider={authProvider} theme={myTheme} >
         {permissions => {
-
-            if (permissions === "no role") {
-                console.log("No permissions")
-                return (
-                    // PREGUNTAR DE ESTO A JORGE
-                    CaLayout()
-                );
-            }
+            // if there are no permissions, you return the CaLayout 
+            // and since you are not logged-in it will take you to the login page
+            if (permissions === "no role") return CaLayout();
 
             if (permissions === "ce") return CeLayout();
 
             return CaLayout();
-        }} 
+        }}
     </Admin>
 );
 

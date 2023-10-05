@@ -2,35 +2,52 @@ import { connectDB } from "../db.js";
 import { ObjectId } from "mongodb";
 import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken';
+import { json } from "express";
 
-async function createNewUser(email, fullName, password, rol) {
-    // check if a user with that email already exists
+async function createNewUser(req, res) {
     let db = await connectDB();
 
-    let oldUser = await db.collection("Usuarios").findOne({ "correo": email });
+    let newUser = req.body;
+    newUser["last_login"] = Date();
+
+    if (newUser.rol == "ca") {
+        let coor_nac = req.body.coor_nac;
+
+        if (coor_nac) {
+            let cn_data = await db.collection("Usuarios").findOne({ "_id": new ObjectId(coor_nac) });
+
+            if (cn_data && cn_data.rol == "cn") {
+                newUser["coor_nac"] = coor_nac;
+            } else {
+                return res.sendStatus(400);
+            }
+        } else {
+            // if you are creating a coor_aula you need to specity their coor_nac
+            return res.sendStatus(400);
+        }
+    }
+
+
+    // check if a user with that email already exists
+    let oldUser = await db.collection("Usuarios").findOne({ "correo": newUser.email });
 
     if (oldUser === null) {
 
         // hash the password
         try {
             const salt = await bcrypt.genSalt(10);
-            const hash = await bcrypt.hash(password, salt);
+            const hash = await bcrypt.hash(newUser.contrasena, salt);
 
-            let newUser = {
-                "correo": email,
-                "nombre_completo": fullName,
-                "contrasena": hash,
-                "last_login": Date(),
-                "rol": rol,
-            };
-            await db.collection("Usuarios").insertOne(newUser);
-            return 201;
+            newUser["contrasena"] = hash;
+
+            let data = await db.collection("Usuarios").insertOne(newUser);
+            return res.json(data);
         } catch {
             console.log("Problem hashing the password");
-            return 500;
+            return res.sendStatus(500);
         }
     } else { // repeated user
-        return 409;
+        return res.sendStatus(409);
     }
 }
 
@@ -59,6 +76,9 @@ async function doLogin(req, res) {
 
         // passwords match
         if (result) {
+            // update last login date
+            db.collection("Usuarios").updateOne({ "correo": email }, { $set: { "last_login": Date() } });
+
             let token = jwt.sign({
                 user: email,
                 rol: user.rol,
@@ -90,7 +110,7 @@ async function getMany(req, res) {
 
     if (id) {
         for (let i = 0; i < id.length; i++) {
-            let user = await db.collection("Usuarios").findOne({ "correo": id[i] }, { projection: { contrasena: 0, id: 0 } });
+            let user = await db.collection("Usuarios").findOne({ "_id": new ObjectId(id[i]) }, { projection: { contrasena: 0 } });
             if (user) users.push(user);
         }
     } else {
@@ -100,7 +120,7 @@ async function getMany(req, res) {
             sorter[_sort] = _order;
         }
 
-        users = await db.collection("Usuarios").find({}).sort(sorter).project({ contrasena: 0, _id: 0 }).toArray();
+        users = await db.collection("Usuarios").find({}).sort(sorter).project({ contrasena: 0 }).toArray();
 
         // set headers needed for amount of data -> react-admin needs this
         res.set('Access-Control-Expose-Headers', 'X-Total-Count')
@@ -116,13 +136,15 @@ async function getMany(req, res) {
     // parse data
     for (let i = 0; i < users.length; i++) {
         // RA asks for an id field
-        users[i]["id"] = users[i]["correo"];
+        users[i]["id"] = users[i]["_id"];
+        delete users[i]["_id"];
 
         // if the user is a coordinador de aula, get their coordinators mail
         if (users[i]["rol"] == "ca" && users[i]["coor_nac"] != null) {
             let coordinador = await db.collection("Usuarios").findOne({ "_id": new ObjectId(users[i]["coor_nac"]) }, { projection: { "correo": 1, "_id": 0 } });
 
-            if (coordinador != null) users[i]["coor_nac"] = coordinador["correo"];
+
+            users[i]["coor_nac"] = (coordinador != null) ? coordinador["correo"] : "Coordinador Nacional no encontrado";
         }
 
 
@@ -145,6 +167,63 @@ async function getMany(req, res) {
     }
 
     res.json(users);
-};
+}
 
-export { createNewUser, doLogin, getMany };
+async function getOne(req, res) {
+    let db = await connectDB();
+
+    let user = await db.collection("Usuarios").findOne({ "_id": new ObjectId(req.params.id) }, { projection: { contrasena: 0 } });
+
+    if (user == null) res.sendStatus(404);
+
+    user["id"] = user["_id"];
+    delete user["_id"];
+
+    switch (user.rol) {
+        case "ce":
+            user["rol"] = "Coordinador Ejecutivo";
+            break;
+
+        case "cn":
+            user["rol"] = "Coordinador Nacional";
+            break;
+
+        case "ca":
+            user["rol"] = "Coordinador de Aula";
+            break;
+    }
+
+    res.json(user);
+}
+
+async function getCNs(req, res) {
+    let db = await connectDB();
+
+    let users = await db.collection("Usuarios").find({ "rol": "cn" }).project({ _id: 1, correo: 1 }).toArray();
+
+    users.map((user) => {
+        user["id"] = user["_id"];
+        delete user["_id"];
+
+        user["name"] = user["correo"];
+        delete user["correo"];
+    })
+
+    res.json(users);
+}
+
+async function deleteUser(req, res) {
+    let db = await connectDB();
+
+    let user = await db.collection("Usuarios").findOne({ "_id": new ObjectId(req.params.id) });
+
+    if (user == null) {
+        return res.sendStatus(404);
+    }
+
+    let data = await db.collection("Usuarios").deleteOne({ "_id": new ObjectId(req.params.id) });
+
+    return res.json(data);
+}
+
+export { createNewUser, doLogin, getMany, getCNs, deleteUser, getOne };
