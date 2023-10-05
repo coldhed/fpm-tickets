@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { connectDB } from '../db.js';
-import { createNewUser, doLogin, getMany, getCNs, deleteUser } from '../helpers/users.js';
+import { createNewUser, doLogin, getMany, getCNs, deleteUser, getOne } from '../helpers/users.js';
 import jwt from 'jsonwebtoken';
 
 const router = Router();
@@ -14,9 +14,8 @@ const router = Router();
 //     response.json(data);
 // })
 
-// get many, get one
+// get many
 router.get("/", async (req, res) => {
-
     try {
         let token = req.get("Authentication");
         let verifiedToken = jwt.verify(token, process.env.JWT_SECRET);
@@ -26,6 +25,23 @@ router.get("/", async (req, res) => {
         }
 
         await getMany(req, res);
+    } catch {
+        // auth failed
+        res.sendStatus(401);
+    }
+});
+
+// get one
+router.get("/:id", async (req, res) => {
+    try {
+        let token = req.get("Authentication");
+        let verifiedToken = jwt.verify(token, process.env.JWT_SECRET);
+
+        if (verifiedToken.rol != "ce") {
+            return res.sendStatus(401);
+        }
+
+        await getOne(req, res);
     } catch {
         // auth failed
         res.sendStatus(401);
@@ -51,7 +67,19 @@ router.post("/", async (req, res) => {
 
 // delete a user
 router.delete("/:id", async (req, res) => {
-    await deleteUser(req, res);
+    try {
+        let token = req.get("Authentication");
+        let verifiedToken = jwt.verify(token, process.env.JWT_SECRET);
+
+        if (verifiedToken.rol != "ce") {
+            return res.sendStatus(401);
+        }
+
+        await deleteUser(req, res);
+    } catch {
+        // auth failed
+        res.sendStatus(401);
+    }
 })
 
 // login

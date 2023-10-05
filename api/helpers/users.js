@@ -107,7 +107,7 @@ async function getMany(req, res) {
 
     if (id) {
         for (let i = 0; i < id.length; i++) {
-            let user = await db.collection("Usuarios").findOne({ "_id": new ObjectId(id[i]) }, { projection: { contrasena: 0, id: 0 } });
+            let user = await db.collection("Usuarios").findOne({ "_id": new ObjectId(id[i]) }, { projection: { contrasena: 0 } });
             if (user) users.push(user);
         }
     } else {
@@ -165,6 +165,19 @@ async function getMany(req, res) {
     res.json(users);
 }
 
+async function getOne(req, res) {
+    let db = await connectDB();
+
+    let user = await db.collection("Usuarios").findOne({ "_id": new ObjectId(req.params.id) }, { projection: { contrasena: 0 } });
+
+    if (user == null) res.sendStatus(404);
+
+    user["id"] = user["_id"];
+    delete user["_id"];
+
+    res.json(user);
+}
+
 async function getCNs(req, res) {
     let db = await connectDB();
 
@@ -195,4 +208,4 @@ async function deleteUser(req, res) {
     return res.json(data);
 }
 
-export { createNewUser, doLogin, getMany, getCNs, deleteUser };
+export { createNewUser, doLogin, getMany, getCNs, deleteUser, getOne };
