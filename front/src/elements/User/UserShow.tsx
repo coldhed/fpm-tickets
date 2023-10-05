@@ -12,6 +12,15 @@ const PostTitle = () => {
     return <span>{record.nombre_completo}</span>;
 };
 
+const ConfirmTitle = () => {
+    const record = useRecordContext();
+
+    // the record can be empty while loading
+    if (!record) return null;
+
+    return <span>Borrar {record.correo}?</span>;
+};
+
 export const UserShow = () => (
     <Show title={<PostTitle />}>
         <SimpleShowLayout >
@@ -21,7 +30,8 @@ export const UserShow = () => (
 
             <Stack direction="row" spacing={10}>
                 <ListButton label="Regresar" icon={<ArrowBack />} color="inherit" />
-                <DeleteWithConfirmButton label="Borrar" />
+                <DeleteWithConfirmButton label="Borrar" confirmTitle={<ConfirmTitle />} />
+                {/* <DeleteButton mutationMode='pessimistic' /> */}
             </Stack>
         </SimpleShowLayout>
     </Show>
