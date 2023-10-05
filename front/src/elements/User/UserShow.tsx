@@ -13,7 +13,7 @@ const PostTitle = () => {
 
     // the record can be empty while loading
 
-    if (!record) return null;
+    if (!record) return <span>Usuario</span>;
     return <span>{record.nombre_completo}</span>;
 };
 

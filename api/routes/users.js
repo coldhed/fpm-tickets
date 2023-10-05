@@ -13,6 +13,21 @@ const router = Router();
 
 //     response.json(data);
 // })
+router.get("/cn", async (req, res) => {
+    try {
+        let token = req.get("Authentication");
+        let verifiedToken = jwt.verify(token, process.env.JWT_SECRET);
+
+        if (verifiedToken.rol != "ce") {
+            return res.sendStatus(401);
+        }
+
+        await getCNs(req, res);
+    } catch {
+        // auth failed
+        res.sendStatus(401);
+    }
+})
 
 // get many
 router.get("/", async (req, res) => {
@@ -88,21 +103,6 @@ router.post("/login", async (req, res) => {
 })
 
 // get coor_nac
-router.get("/cn", async (req, res) => {
-    try {
-        let token = req.get("Authentication");
-        let verifiedToken = jwt.verify(token, process.env.JWT_SECRET);
-
-        if (verifiedToken.rol != "ce") {
-            return res.sendStatus(401);
-        }
-
-        await getCNs(req, res);
-    } catch {
-        // auth failed
-        res.sendStatus(401);
-    }
-})
 
 
 export default router;

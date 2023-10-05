@@ -175,6 +175,20 @@ async function getOne(req, res) {
     user["id"] = user["_id"];
     delete user["_id"];
 
+    switch (user.rol) {
+        case "ce":
+            user["rol"] = "Coordinador Ejecutivo";
+            break;
+
+        case "cn":
+            user["rol"] = "Coordinador Nacional";
+            break;
+
+        case "ca":
+            user["rol"] = "Coordinador de Aula";
+            break;
+    }
+
     res.json(user);
 }
 
