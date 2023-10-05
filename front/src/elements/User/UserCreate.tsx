@@ -30,8 +30,10 @@ export const UserCreate = (props: any) => {
     }
 
     useEffect(() => {
-        fetchCoor_nac();
-    })
+        if (isLoading) {
+            fetchCoor_nac();
+        }
+    }, [isLoading])
 
     return (
         <Create {...props}>
