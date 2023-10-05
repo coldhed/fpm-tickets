@@ -76,6 +76,9 @@ async function doLogin(req, res) {
 
         // passwords match
         if (result) {
+            // update last login date
+            db.collection("Usuarios").updateOne({ "correo": email }, { $set: { "last_login": Date() } });
+
             let token = jwt.sign({
                 user: email,
                 rol: user.rol,
