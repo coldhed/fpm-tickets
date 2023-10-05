@@ -143,7 +143,8 @@ async function getMany(req, res) {
         if (users[i]["rol"] == "ca" && users[i]["coor_nac"] != null) {
             let coordinador = await db.collection("Usuarios").findOne({ "_id": new ObjectId(users[i]["coor_nac"]) }, { projection: { "correo": 1, "_id": 0 } });
 
-            if (coordinador != null) users[i]["coor_nac"] = coordinador["correo"];
+
+            users[i]["coor_nac"] = (coordinador != null) ? coordinador["correo"] : "Coordinador Nacional no encontrado";
         }
 
 
