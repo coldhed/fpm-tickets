@@ -1,4 +1,4 @@
-import {Create, SimpleForm, Toolbar, SelectInput, SaveButton, Edit, TextField, TabbedForm, FormTab, required, TextInput, DateField } from 'react-admin';
+import {List, Create, SimpleForm, Toolbar, SelectInput, SaveButton, Edit, TextField, TabbedForm, FormTab, required, TextInput, DateField } from 'react-admin';
 import {useRecordContext} from "react-admin";
 import {useOnSuccess,} from '../hooks/costumhandlers';
 import "../CSS/TicketUpdate.css";
@@ -55,10 +55,9 @@ const CostumCreateComment = () => (
 
 
 export const TicketEdit = () => {
-    const onSuccess = useOnSuccess(`Cambios guardados`, '/tickets');
 
     return (
-        <Edit title={<TicketTitle/>} mutationOptions={{onSuccess}}>
+        <Edit title={<TicketTitle/>} >
            <TabbedForm>
             <FormTab label = "Ticket">
                 <InicioTextComponent />
@@ -82,8 +81,13 @@ export const TicketEdit = () => {
             </FormTab>
 
             <FormTab label="Comentarios">
+                <List resource=''>
+                    <TextField source="comentarios" />
+                </List>
                 <CostumCreateComment/>
             </FormTab>
+            
+
             <FormTab label="Finalizar ticket">
                 <TextInput source="resolucion" />
             </FormTab>

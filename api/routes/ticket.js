@@ -70,34 +70,55 @@ router.get("/:id", async (request, res) => {
 
 
 //create
-router.post("/", async (request, response) => {
+router.post("/", async (request, res) => {
     // console.log(request.body)
 
     let db = await connectDB();
     let addValue = request.body
+    let comentarios = addValue["comentarios"];
+    addValue["comentarios"] = [{ "comentarios": comentarios, "fecha": Date() }];
     addValue["inicio"] = Date();
     // let data = await db.collection('Tickets').find({}).toArray();
     // let id = data.length + 1;
     // addValue["id"] = id;
    let data = await db.collection('Tickets').insertOne(addValue);
-    response.json(data);
+    res.json(data);
 })
 
 //update
-router.put("/:id", async (request, response) => {
+router.put("/:id", async (request, res) => {
     let db = await connectDB();
 
-    let addValue = request.body
-    addValue["id"] = Number(request.params.id);
-    let data = await db.collection("Tickets").updateOne({ "id": addValue["id"] }, { "$set": addValue });
-    data = await db.collection('Tickets').find({ "id": Number(request.params.id) }).project({ }).toArray();
-    //response.json(data[0]);
-    for (let i = 0; i < data.length; i++) {
-        data[i]["id"] = data[i]["_id"];
-    }
+    let addValue = request.body;
+    console.log(addValue) //fdalñsjfñal
+
+    addValue["_id"] = new ObjectId(request.params.id);
+    delete addValue["id"];
+
+    let data = await db.collection("Tickets").updateOne({ "_id": addValue["_id"] }, { "$set": addValue });
+
+    data = await db.collection('Tickets').findOne({ "_id": new ObjectId(request.params.id) });
+    data["id"] = data["_id"];
+    delete data["_id"];
 
     res.json(data);
 })
+
+//update
+// router.put("/:id", async (request, response) => {
+//     let db = await connectDB();
+
+//     let addValue = request.body
+//     addValue["id"] = Number(request.params.id);
+//     let data = await db.collection("Tickets").updateOne({ "id": addValue["id"] }, { "$set": addValue });
+//     data = await db.collection('Tickets').find({ "id": Number(request.params.id) }).project({ }).toArray();
+
+//     for (let i = 0; i < data.length; i++) {
+//         data[i]["id"] = data[i]["_id"];
+//     }
+
+//     res.json(data);
+// })
 
 //delete
 router.delete("/:id", async (request, response) => {
