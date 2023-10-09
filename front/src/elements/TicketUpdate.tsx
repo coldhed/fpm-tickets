@@ -1,4 +1,4 @@
-import {List, Create, SimpleForm, Toolbar, SelectInput, SaveButton, Edit, TextField, TabbedForm, FormTab, required, TextInput, DateField } from 'react-admin';
+import {ArrayField, List, Create, SimpleForm, Toolbar, SelectInput, SaveButton, Edit, TextField, TabbedForm, FormTab, required, TextInput, DateField } from 'react-admin';
 import {useRecordContext} from "react-admin";
 import {useOnSuccess,} from '../hooks/costumhandlers';
 import "../CSS/TicketUpdate.css";
@@ -46,7 +46,9 @@ const EstatusCambioTextComponent = () => (
 const CostumCreateComment = () => (
     <Create>
         <SimpleForm>
-            <TextInput source="comentarios" multiline rows={5} />
+            <ArrayField source="comentarios">
+                <TextField source="comentarios" />
+            </ArrayField>
         </SimpleForm>
     </Create>
 );
@@ -58,7 +60,7 @@ export const TicketEdit = () => {
 
     return (
         <Edit title={<TicketTitle/>} >
-           <TabbedForm>
+           <TabbedForm >
             <FormTab label = "Ticket">
                 <InicioTextComponent />
                 <DateField label="Inicio" source="inicio" showTime />
@@ -73,7 +75,7 @@ export const TicketEdit = () => {
                 < EstatusTextComponent />
                 <TextField label="Estatus actual" source="estatus" />
                 <EstatusCambioTextComponent />
-                <SelectInput label="Estatus" source="estatus" choices={[
+                <SelectInput label="Estatus" source="estatus"  choices={[
                     { id: 'Abierto', name: 'Abierto' },
                     { id: 'En proceso', name: 'En proceso' },
                     { id: 'Cerrado', name: 'Cerrado' },
@@ -84,11 +86,13 @@ export const TicketEdit = () => {
                 <List resource=''>
                     <TextField source="comentarios" />
                 </List>
+                <TextInput source="comentarios" />
                 <CostumCreateComment/>
             </FormTab>
             
 
             <FormTab label="Finalizar ticket">
+                <TextField source="resolucion" />
                 <TextInput source="resolucion" />
             </FormTab>
        </TabbedForm>
