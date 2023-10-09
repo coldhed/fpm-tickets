@@ -1,7 +1,32 @@
 import { useMediaQuery, Theme } from "@mui/material";
-import {Toolbar, List, Datagrid, TextField,EditButton, DateField } from "react-admin";
+import {TextInput, SearchInput, Toolbar, List, Datagrid, TextField,EditButton, DateField } from "react-admin";
 import LibaryBooks from "@mui/icons-material/LibraryBooks";
+import { Chip } from '@mui/material'
 import Visibility from "@mui/icons-material/Visibility";
+
+
+import { SavedQueriesList, FilterLiveSearch, FilterList, FilterListItem } from 'react-admin';
+import { Card, CardContent } from '@mui/material';
+import InventoryRoundedIcon from '@mui/icons-material/InventoryRounded';
+import PriorityHighRoundedIcon from '@mui/icons-material/PriorityHighRounded';
+
+export const PostFilterSidebar = () => (
+    <Card sx={{ order: -1, mr: 2, mt: 9, width: 200 }}>
+        <CardContent>
+        <FilterLiveSearch source="titulo" label="TÍTULO" />
+            <FilterList label="PRIORIDAD" icon={<PriorityHighRoundedIcon />}>
+                <FilterListItem label="Alta" value={{ prioridad: "Alta" }} />
+                <FilterListItem label="Media" value={{ prioridad: "Media" }} />
+                <FilterListItem label="Baja" value={{ prioridad: "Baja" }} />
+            </FilterList>
+            <FilterList label="ESTATUS" icon={<InventoryRoundedIcon />}>
+                <FilterListItem label="Abierto" value={{ prioridad: "Abierto" }} />
+                <FilterListItem label="En proceso" value={{ prioridad: "En proceso" }} />
+                <FilterListItem label="Finalizado" value={{ prioridad: "Finalizado" }} />
+            </FilterList>
+        </CardContent>
+    </Card>
+);
 
 const CustomEditButton = () => (
     <EditButton
@@ -10,6 +35,12 @@ const CustomEditButton = () => (
     />
 );
 
+
+
+const FiltrosList = [
+    <SearchInput source="titulo" alwaysOn />,
+];
+
 const CustomListToolbar = () => (
     <Toolbar>
         <CustomEditButton />
@@ -17,7 +48,7 @@ const CustomListToolbar = () => (
 );
 
 export const TicketList = () => (
-    <List>
+    <List aside={<PostFilterSidebar />}>
         <Datagrid >
             <TextField source="titulo" label="Título"/>
             <TextField source="prioridad" label="Prioridad"/>

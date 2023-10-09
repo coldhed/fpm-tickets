@@ -1,16 +1,9 @@
 import { Router } from 'express';
 import { connectDB } from '../db.js';
-import { createNewTicket } from '../helpers/ticket.js';
 import { ObjectId } from 'mongodb';
 
 
 const router = Router();
-
-/*
-router.post("ruta", async (request, response) => {
-    
-})
-*/
 
 //getList, getMany, getManyReference
 router.get("/", async (req, res) => {
@@ -90,10 +83,14 @@ router.put("/:id", async (request, res) => {
     let db = await connectDB();
 
     let addValue = request.body;
-    console.log(addValue) //fdalñsjfñal
+    //console.log(addValue) 
 
     addValue["_id"] = new ObjectId(request.params.id);
     delete addValue["id"];
+
+    if (addValue.hasOwnProperty("resolucion")) {
+        addValue["estatus"] = "Cerrado";
+    }
 
     let data = await db.collection("Tickets").updateOne({ "_id": addValue["_id"] }, { "$set": addValue });
 
@@ -104,29 +101,19 @@ router.put("/:id", async (request, res) => {
     res.json(data);
 })
 
-//update
-// router.put("/:id", async (request, response) => {
-//     let db = await connectDB();
-
-//     let addValue = request.body
-//     addValue["id"] = Number(request.params.id);
-//     let data = await db.collection("Tickets").updateOne({ "id": addValue["id"] }, { "$set": addValue });
-//     data = await db.collection('Tickets').find({ "id": Number(request.params.id) }).project({ }).toArray();
-
-//     for (let i = 0; i < data.length; i++) {
-//         data[i]["id"] = data[i]["_id"];
-//     }
-
-//     res.json(data);
-// })
 
 //delete
-router.delete("/:id", async (request, response) => {
+router.delete("/:id", async (req, res) => {
     let db = await connectDB();
 
-    let data = await db.collection('Tickets').deleteOne({ "id": Number(request.params.id) });
-    response.json(data);
+    let data = await db.collection('Tickets').deleteOne({ "_id": new ObjectId(req.params.id) });
+    data["id"] = data["_id"];
+    delete data["_id"];
+
+    res.json(data);
 })
+
+
 
 
 
