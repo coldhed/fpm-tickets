@@ -5,7 +5,7 @@ dotenv.config();
 
 import { ENV, PORT } from "./const.js"
 import { connectDB } from './db.js';
-import { usersRouter, ticketRouter } from "./routes/routes.js"
+import { usersRouter, ticketRouter, aulasRouter} from "./routes/routes.js"
 
 // const bodyParser = require("body-parser") //NUEVO
 
@@ -23,7 +23,7 @@ app.get("/", async (req, res) => {
 // ROUTES
 app.use("/Usuarios", usersRouter)
 app.use("/Tickets", ticketRouter)
-
+app.use("/Aula", aulasRouter)
 
 app.listen(PORT, () => {
     console.log("Server started");

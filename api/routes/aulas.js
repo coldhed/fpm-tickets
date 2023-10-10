@@ -1,0 +1,74 @@
+import { Router } from 'express';
+import { connectDB } from '../db.js';
+import { createNewAula } from '../helpers/aulas.js';
+import jwt from 'jsonwebtoken';
+
+const router = Router();
+
+
+
+router.get("/", async (req, res) => {
+    let db = await connectDB();
+    let data = [];
+
+    if ("_sort" in req.query) { 
+        let sortBy = req.query._sort;
+        let sortOrder = req.query._order == "ASC" ? 1 : -1; //ASCENDENTE O DESCENDENTE
+
+        let start = Number(req.query._start)
+        let end = Number(req.query._end)
+
+        let sorter = {}
+        sorter[sortBy] = sortOrder
+
+        data = await db.collection("Aula").find({}).sort(sorter).project({ }).toArray();
+
+        res.set("Access-Control-Expose-Headers", "X-Total-Count"); 
+        res.set("X-Total-Count", data.length);
+
+        data = data.slice(start, end); 
+
+    } else if ("id" in req.query) { 
+
+        for (let index = 0; index < req.query.id.length; index++) { //recorremos el array de ids
+            let dataObtain = await db.collection('Aula').find({ id: Number(req.query.id[index]) }).project({ }).toArray(); // sacamos el valor del index y luego la proyección
+            data = await data.concat(dataObtain)
+        }
+
+    } else { //Reference -> datos que me pide el query 
+
+        data = await db.collection('Aula').find(req.query).project({ }).toArray();
+        res.set('Access-Control-Expose-Headers', 'X-Total-Count')
+        res.set('X-Total-Count', data.length)
+    }
+    for (let i = 0; i < data.length; i++) {
+        data[i]["id"] = data[i]["_id"];
+    }
+
+    res.json(data);
+})
+
+router.get("/nombre", async (req, res) => {
+    let db = await connectDB();
+    let users = await db.collection("Aula").find({}).project({_id: 1, nombre: 1}).toArray();
+    
+    users.map((user) => {
+        user["id"] = user["_id"];
+        delete user["_id"];
+        
+        user["name"] = user["nombre"];
+        delete user["nombre"];
+    })
+    res.json(users);
+    console.log(users)
+})
+
+//getOne
+router.get("/:id", async (req, res) => {
+    let db = await connectDB();
+
+    let data = await db.collection('Aula').find({ "id": Number(req.params.id) }).project({ _id: 0 }).toArray();
+    res.json(data[0]);
+})
+
+export default router;
