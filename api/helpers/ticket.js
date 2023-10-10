@@ -10,7 +10,7 @@ async function createNewTicket(titulo, categoria, aula, prioridad, resolucion, e
             "inicio:": Date(),
             "titulo": titulo,
             "categoria": categoria,
-            "aula": aula,
+            "aula": nombre,
             "prioridad": prioridad,
             "resolucion": resolucion,
             "estatus": estatus,
