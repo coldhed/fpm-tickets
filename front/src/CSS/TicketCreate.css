@@ -1,9 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 .full-width-input {
     width: 100%;
     text-align: center;
 }
 
 .MuiButtonBase-root.MuiButton-root.custom-save-button {
-    background-color: rgb(194, 32, 50); 
-    color: rgb(255, 255, 255); 
+    background-color: rgb(194, 32, 50);
+    color: rgb(255, 255, 255);
 }
