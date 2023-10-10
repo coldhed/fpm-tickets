@@ -22,7 +22,7 @@ router.get("/cn", async (req, res) => {
             return res.sendStatus(401);
         }
 
-        await getCNs(req, res);
+        await getCNs(req, res, verifiedToken.user);
     } catch {
         // auth failed
         res.sendStatus(401);
@@ -39,7 +39,7 @@ router.get("/", async (req, res) => {
             return res.sendStatus(401);
         }
 
-        await getMany(req, res);
+        await getMany(req, res, verifiedToken.user);
     } catch {
         // auth failed
         res.sendStatus(401);
@@ -55,8 +55,7 @@ router.get("/:id", async (req, res) => {
         if (verifiedToken.rol != "ce") {
             return res.sendStatus(401);
         }
-
-        await getOne(req, res);
+        await getOne(req, res, verifiedToken.user);
     } catch {
         // auth failed
         res.sendStatus(401);
@@ -73,7 +72,7 @@ router.post("/", async (req, res) => {
             return res.sendStatus(401);
         }
 
-        await createNewUser(req, res);
+        await createNewUser(req, res, verifiedToken.user);
     } catch {
         // auth failed
         res.sendStatus(401);
@@ -90,7 +89,7 @@ router.delete("/:id", async (req, res) => {
             return res.sendStatus(401);
         }
 
-        await deleteUser(req, res);
+        await deleteUser(req, res, verifiedToken.user);
     } catch {
         // auth failed
         res.sendStatus(401);
