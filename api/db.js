@@ -18,4 +18,16 @@ async function connectDB() {
     }
 }
 
-export { connectDB }
+async function logDB(action, user) {
+    let db = await connectDB();
+
+    const log = {
+        action: action,
+        user: user,
+        date: new Date()
+    }
+
+    await db.collection('logs').insertOne(log);
+}
+
+export { connectDB, logDB }
