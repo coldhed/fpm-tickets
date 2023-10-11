@@ -20,11 +20,13 @@ import myTheme from "./myTheme";
 import { CeLayout } from "./layouts/CeLayout";
 import { CaLayout } from "./layouts/CaLayout";
 
+import { MyLayout } from './MyLayout';
+
 
 
 export const App = () => (
 
-    <Admin dataProvider={dataProvider} authProvider={authProvider} theme={myTheme} i18nProvider={i18nProvider} >
+    <Admin dataProvider={dataProvider} authProvider={authProvider} theme={myTheme} i18nProvider={i18nProvider} layout={MyLayout} >
         {permissions => {
             // if there are no permissions, you return the CaLayout 
             // and since you are not logged-in it will take you to the login page
