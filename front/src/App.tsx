@@ -1,5 +1,6 @@
 import {
     Admin,
+    Layout,
     Resource,
     ListGuesser,
     EditGuesser,
@@ -14,6 +15,7 @@ import { dataProvider } from "./dataProvider";
 import authProvider from "./authProvider"
 import { i18nProvider } from "./i18nProvider/i18nProvider";
 import MyLoginPage from "./MyLoginPage";
+import { MyAppBar } from "./MyAppBar";
 
 import myTheme from "./myTheme";
 
@@ -21,7 +23,7 @@ import myTheme from "./myTheme";
 import { CeLayout } from "./layouts/CeLayout";
 import { CaLayout } from "./layouts/CaLayout";
 
-
+const MyLayout = (props: any) => <Layout {...props} appBar={MyAppBar} />;
 
 export const App = () => (
 
@@ -31,6 +33,7 @@ export const App = () => (
         theme={myTheme}
         i18nProvider={i18nProvider}
         loginPage={<MyLoginPage theme={myTheme} />}
+        layout={MyLayout}
     >
         {permissions => {
             // if there are no permissions, you return the CaLayout 
