@@ -60,8 +60,26 @@ router.get("/nombre", async (req, res) => {
         delete user["nombre"];
     })
     res.json(users);
-    console.log(users)
 })
+
+router.get("/ciudad", async (req, res) => {
+    try {
+        let db = await connectDB();
+        let users = await db.collection("Aula").find({}).project({_id: 1, ciudad: 1}).toArray();
+    
+        users = users.map((user) => {
+            user["id"] = user["_id"];
+            delete user["_id"];
+            return user;
+        });
+        
+        res.json(users);
+    } catch (error) {
+        console.error("Error retrieving data:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
 
 //getOne
 router.get("/:id", async (req, res) => {

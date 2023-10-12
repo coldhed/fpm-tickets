@@ -4,29 +4,23 @@ import ArrowBack from "@mui/icons-material/ArrowBack";
 
 const PostTitle = () => {
     const record = useRecordContext();
-
     if (!record) return null;
-
     return <span>{record.nombre}</span>;
 };
 
 const ConfirmTitle = () => {
     const record = useRecordContext();
-
     if (!record) return null;
-
-    return <span>Borrar {record.coor_aula}?</span>;
+    return <span>Borrar {record.ciudad}?</span>;
 };
 
 export const AulaShow = () => (
     <Show title={<PostTitle />}>
-        <SimpleShowLayout >
+        <SimpleShowLayout>
                 <TextField source="nombre" label="Nombre" />
-                <TextField source="coor_aula" label="Coordinador" />
-                <TextField source="direccion" label="Direccion" />
                 <TextField source="ciudad" label="Ciudad" />
-                <TextField source="estado" label="Estado" />
-                <TextField source="codigo_postal" label="Codigo Postal" />
+                <TextField source="esatdo" label="Estado" />
+                <TextField source="CP" label="Codigo Postal" />
                 <TextField source="calle" label="Calle" />
 
             <Stack direction="row" spacing={10}>
@@ -36,3 +30,12 @@ export const AulaShow = () => (
         </SimpleShowLayout>
     </Show>
 );
+
+// "_id": "6528672852adaf594cea4f33",
+//     "nombre": "Aula 1 - Colegio Occidente",
+//     "coor_aula": "651221e905e2d70aed0d4f95",
+//     "ciudad": "Ciudad Obregón",
+//     "esatdo": "Sonora",
+//     "CP": "189",
+//     "calle": "Calle 300",
+//     "id": "6528672852adaf594cea4f33"
