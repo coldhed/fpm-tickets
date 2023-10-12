@@ -1,4 +1,4 @@
-import {ArrayField, List, Create, SimpleForm, Toolbar, SelectInput, SaveButton, Edit, TextField, TabbedForm, FormTab, required, TextInput, DateField } from 'react-admin';
+import {ArrayInputProps, SimpleFormIterator, ArrayInput, Datagrid, ArrayField, List, Create, SimpleForm, Toolbar, SelectInput, SaveButton, Edit, TextField, TabbedForm, FormTab, required, TextInput, DateField } from 'react-admin';
 import {useRecordContext} from "react-admin";
 import {useOnSuccess,} from '../hooks/costumhandlers';
 import "../CSS/TicketUpdate.css";
@@ -43,21 +43,25 @@ const EstatusCambioTextComponent = () => (
     </div>
 );
 
-const CostumCreateComment = () => (
-    <Create>
-        <SimpleForm>
-            <ArrayField source="comentarios">
-                <TextField source="comentarios" />
-            </ArrayField>
-        </SimpleForm>
-    </Create>
-);
 
+const CustomArrayInput = (props : any) => {
+
+    const customProps = { ...props };
+    delete customProps.record;
+    delete customProps.onAddClick;
+
+    return (
+        <ArrayInput {...customProps}>
+        <SimpleFormIterator>
+            <TextInput source="comentarios" label="Nuevo Comentario" />
+        </SimpleFormIterator>
+        </ArrayInput>
+    );
+};
 
 
 
 export const TicketEdit = () => {
-
     return (
         <Edit title={<TicketTitle/>} >
            <TabbedForm >
@@ -83,18 +87,28 @@ export const TicketEdit = () => {
             </FormTab>
 
             <FormTab label="Comentarios">
-                <List resource=''>
-                    <TextField source="comentarios" />
-                </List>
-                <TextInput source="comentarios" />
-                <CostumCreateComment/>
+                <SimpleForm>
+                    <ArrayField source="comentarios">
+                        <Datagrid>
+                            <TextField source="comentarios" label="Comentarios" />
+                            <TextField source="fecha" label="Fecha" />
+                        </Datagrid>
+                    </ArrayField>
+                </SimpleForm>
+                <ArrayInput source="comentarios">
+                        <SimpleFormIterator>
+                            <TextInput source="comentarios" label="Nuevo Comentario" />
+                        </SimpleFormIterator>
+                    </ArrayInput>
+  
             </FormTab>
-            
 
+            
             <FormTab label="Finalizar ticket">
                 <TextField source="resolucion" />
                 <TextInput source="resolucion" />
             </FormTab>
+
        </TabbedForm>
       </Edit>
     );
