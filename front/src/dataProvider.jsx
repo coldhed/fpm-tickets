@@ -13,4 +13,4 @@ const fetchJsonUtil = (url, options = {}) => {
 };
 
 
-export const dataProvider = jsonServerProvider("http://127.0.0.1:4000", fetchJsonUtil);
+export const dataProvider = jsonServerProvider("https://127.0.0.1:4000", fetchJsonUtil);
