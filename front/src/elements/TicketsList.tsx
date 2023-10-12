@@ -20,9 +20,9 @@ export const PostFilterSidebar = () => (
                 <FilterListItem label="Baja" value={{ prioridad: "Baja" }} />
             </FilterList>
             <FilterList label="ESTATUS" icon={<InventoryRoundedIcon />}>
-                <FilterListItem label="Abierto" value={{ prioridad: "Abierto" }} />
-                <FilterListItem label="En proceso" value={{ prioridad: "En proceso" }} />
-                <FilterListItem label="Finalizado" value={{ prioridad: "Finalizado" }} />
+                <FilterListItem label="Abierto" value={{ estatus: "Abierto" }} />
+                <FilterListItem label="En proceso" value={{ estatus: "En proceso" }} />
+                <FilterListItem label="Cerrado" value={{ estatus: "Cerrado" }} />
             </FilterList>
         </CardContent>
     </Card>
@@ -58,4 +58,6 @@ export const TicketList = () => (
         </Datagrid>
     </List>
 );
+
+
 

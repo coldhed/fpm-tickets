@@ -117,6 +117,7 @@ router.put("/:id", async (request, res) => {
 
     if (addValue.hasOwnProperty("resolucion")) {
         addValue["estatus"] = "Cerrado";
+        addValue["fin"] = Date();
     }
 
     let data = await db.collection("Tickets").updateOne({ "_id": addValue["_id"] }, { "$set": addValue });
