@@ -91,7 +91,7 @@ export const TicketEdit = () => {
                     <ArrayField source="comentarios">
                         <Datagrid>
                             <TextField source="comentarios" label="Comentarios" />
-                            <TextField source="fecha" label="Fecha" />
+                            <DateField source="fecha" label="Fecha" />
                         </Datagrid>
                     </ArrayField>
                 </SimpleForm>
