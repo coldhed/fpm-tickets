@@ -20,7 +20,21 @@ router.get("/", async (req, res) => {
         let sorter = {} // no puedo aladir un avariable como nombre salvo así
         sorter[sortBy] = sortOrder
 
-        data = await db.collection("Tickets").find({}).sort(sorter).project({ }).toArray();
+        let filter = {};
+
+        if (req.query.titulo) {
+            filter.titulo = req.query.titulo;
+        }
+
+        if (req.query.prioridad) {
+            filter.prioridad = req.query.prioridad;
+        }
+
+        if (req.query.estatus) {
+            filter.estatus = req.query.estatus;
+        }
+
+        data = await db.collection("Tickets").find(filter).sort(sorter).project({ }).toArray();
 
         res.set("Access-Control-Expose-Headers", "X-Total-Count"); //los headers de la respuesta
         res.set("X-Total-Count", data.length);
@@ -35,15 +49,25 @@ router.get("/", async (req, res) => {
             data = await data.concat(dataObtain)
         }
         
-    } else { //Reference -> datos que me pide el query 
+    } else { 
         
-        data = await db.collection('tickets').find(request.query).project({ }).toArray();
+
+        // data = await db.collection('Tickets').find(filter).project({ }).toArray();
+        // res.set('Access-Control-Expose-Headers', 'X-Total-Count');
+        // res.set('X-Total-Count', data.length);
+
+        data = await db.collection('Tickets').find(request.query).project({ }).toArray();
         res.set('Access-Control-Expose-Headers', 'X-Total-Count')
         res.set('X-Total-Count', data.length)
     }
+
     for (let i = 0; i < data.length; i++) {
         data[i]["id"] = data[i]["_id"];
     }
+
+    // for (let i = 0; i < data.length; i++) {
+    //     data[i]["id"] = data[i]["_id"];
+    // }
 
 
     res.json(data);
@@ -83,10 +107,13 @@ router.put("/:id", async (request, res) => {
     let db = await connectDB();
 
     let addValue = request.body;
+
     //console.log(addValue) 
 
     addValue["_id"] = new ObjectId(request.params.id);
     delete addValue["id"];
+    addValue.comentarios[addValue.comentarios.length - 1]["fecha"] = Date();
+    addValue["u_mod"] = Date();
 
     if (addValue.hasOwnProperty("resolucion")) {
         addValue["estatus"] = "Cerrado";
