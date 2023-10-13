@@ -82,5 +82,133 @@ router.get("/tickets-per-aula", async (req, res) => {
     }
 });
 
+// tercera grafica
+// Numero de incidentes en proceso, abiertos y cerrados en la semana. 
+
+// router.get("/tickets-status-in-week", async (req, res) => {
+//     try {
+//         const db = await connectDB();
+        
+//         // Obtener la fecha de inicio de la semana actual
+//         const today = new Date();
+//         const startOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay());
+
+//         // Consulta para contar los tickets en cada estado dentro de la semana actual
+//         const ticketStatusInWeek = await db.collection('Tickets').aggregate([
+//             {
+//                 $match: {
+//                     estatus: {
+//                         $in: ["Abierto", "En proceso", "Cerrado"]
+//                     },
+//                     cierre: {
+//                         $gte: startOfWeek
+//                     }
+//                 }
+//             },
+//             {
+//                 $group: {
+//                     _id: "$estatus",
+//                     count: { $sum: 1 }
+//                 }
+//             }
+//         ]).toArray();
+
+//         // Organizar los datos en dos arrays: uno para los estados y otro para la cantidad de tickets en cada estado
+//         const statuses = [];
+//         const ticketCounts = [];
+        
+//         ticketStatusInWeek.forEach((entry) => {
+//             const status = entry._id;
+//             const ticketCount = entry.count;
+
+//             // Agregar el estado y el recuento a los arrays respectivos
+//             statuses.push(status);
+//             ticketCounts.push(ticketCount);
+//         });
+
+//         res.json({ statuses, ticketCounts });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ error: "Error al obtener datos de tickets por estado en la semana." });
+//     }
+// });
+
+
+// 4 just closed
+// router.get("/closed-tickets", async (req, res) => {
+//     try {
+//         const db = await connectDB();
+
+//         // Consulta para contar los tickets en estado "Cerrado"
+//         const closedTickets = await db.collection('Tickets').aggregate([
+//             {
+//                 $match: {
+//                     estatus: "Cerrado"
+//                 }
+//             },
+//             {
+//                 $group: {
+//                     _id: null,
+//                     count: { $sum: 1 }
+//                 }
+//             }
+//         ]).toArray();
+
+//         // Extraer el recuento de tickets en estado "Cerrado"
+//         let closedTicketCount = 0;
+//         if (closedTickets.length > 0) {
+//             closedTicketCount = closedTickets[0].count;
+//         }
+
+//         res.json({ estatus: "Cerrado", ticketCount: closedTicketCount });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ error: "Error al obtener datos de tickets en estado 'Cerrado'." });
+//     }
+// });
+
+// 4 three status
+
+router.get("/tickets-by-status", async (req, res) => {
+    try {
+        const db = await connectDB();
+
+        // Consulta para contar los tickets en cada uno de los tres estados
+        const ticketStatus = await db.collection('Tickets').aggregate([
+            {
+                $match: {
+                    estatus: { $in: ["Abierto", "En proceso", "Cerrado"] }
+                }
+            },
+            {
+                $group: {
+                    _id: "$estatus",
+                    count: { $sum: 1 }
+                }
+            }
+        ]).toArray();
+
+        // Organizar los datos en dos arrays: uno para los estados y otro para la cantidad de tickets en cada estado
+        const statuses = [];
+        const ticketCounts = [];
+
+        ticketStatus.forEach((entry) => {
+            const status = entry._id;
+            const ticketCount = entry.count;
+
+            // Agregar el estado y el recuento a los arrays respectivos
+            statuses.push(status);
+            ticketCounts.push(ticketCount);
+        });
+
+        res.json({ statuses, ticketCounts });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error al obtener datos de tickets por estado." });
+    }
+});
+
+
+
 
 export default router;

@@ -1,5 +1,6 @@
 import LineChart from "../src/charts/LineChart";
 import AulaMasIncidentes from "./charts/AulaMasIncidentes";
+import WeeklyStatus from "./charts/WeeklyStatus";
 
 // import BarsChart from "./BarsChart";
 // import PiesChart from "./PiesChart";
@@ -27,20 +28,22 @@ function Dashboard() {
             <div>
                 <p className="m-2"><b>Ejemplo #2: </b>Gráfico de barras</p>
                 <div className="bg-light mx-auto px-2 border border-2 border-primary" style={{width:"450px", height:"225px"}}>
-                    <BarsChart />
+                    <WeeklyStatus />
                 </div>
-            </div>
+            </div> */}
+
+            
             <hr className="mt-3 mb-2"/>
             <div>
                 <p className="m-2"><b>Ejemplo #3: </b>Gráfico circular</p>
                 <div className="bg-light mx-auto border border-2 border-primary" style={{width:"450px", height:"250px"}}>
                     <div style={{width:"100%", height:"100%", padding:"10px 0"}}>
-                        <PiesChart />                       
+                        <WeeklyStatus />                       
                     </div>
                 </div>
-            </div> */}
-        </div>
-    );
+            </div>
+        </div> 
+     );
 }
 
 export default Dashboard;
