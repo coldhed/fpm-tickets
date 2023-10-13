@@ -21,6 +21,8 @@ import myTheme from "./myTheme";
 import { CeLayout } from "./layouts/CeLayout";
 import { CaLayout } from "./layouts/CaLayout";
 
+import { MyLayout } from './MyLayout';
+
 
 
 export const App = () => (
@@ -31,6 +33,7 @@ export const App = () => (
         theme={myTheme}
         i18nProvider={i18nProvider}
         loginPage={<MyLoginPage theme={myTheme} />}
+        layout={MyLayout}
     >
         {permissions => {
             // if there are no permissions, you return the CaLayout 

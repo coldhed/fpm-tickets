@@ -11,7 +11,7 @@ dotenv.config();
 
 import { ENV, PORT } from "./const.js"
 import { connectDB } from './db.js';
-import { usersRouter, ticketRouter, aulasRouter} from "./routes/routes.js"
+import { usersRouter, ticketRouter, aulasRouter, dashboardRouter} from "./routes/routes.js"
 
 
 
@@ -19,7 +19,7 @@ import { usersRouter, ticketRouter, aulasRouter} from "./routes/routes.js"
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors()); // cualquier dominio puede pingear al api
 // app.use(bodyParser.json()); //NUEVO
 
 
@@ -32,6 +32,7 @@ app.get("/", async (req, res) => {
 app.use("/Usuarios", usersRouter)
 app.use("/Tickets", ticketRouter)
 app.use("/Aula", aulasRouter)
+app.use("/dashboard", dashboardRouter)
 
 // app.listen(PORT, () => {
 //     console.log("Server started");
