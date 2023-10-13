@@ -134,7 +134,7 @@ router.get("/tickets-per-aula", async (req, res) => {
 // });
 
 
-// 4 just closed
+// 3 just closed
 // router.get("/closed-tickets", async (req, res) => {
 //     try {
 //         const db = await connectDB();
@@ -167,7 +167,7 @@ router.get("/tickets-per-aula", async (req, res) => {
 //     }
 // });
 
-// 4 three status
+// 3 three status
 
 router.get("/tickets-by-status", async (req, res) => {
     try {
@@ -205,6 +205,40 @@ router.get("/tickets-by-status", async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Error al obtener datos de tickets por estado." });
+    }
+});
+
+
+// 4
+
+
+// promedio 
+router.get("/average-resolution-time", async (req, res) => {
+    try {
+        const db = await connectDB();
+
+        // Consulta para obtener los tickets con timestamps de inicio y fin
+        const ticketsWithTimestamps = await db.collection('Tickets').find({
+            inicio: { $exists: true },
+            cierre: { $exists: true }
+        }).toArray();
+
+        // Calcular el tiempo de resolución para cada ticket
+        const resolutionTimes = ticketsWithTimestamps.map((ticket) => {
+            const startTime = new Date(ticket.inicio);
+            const endTime = new Date(ticket.cierre);
+            const resolutionTime = endTime - startTime;
+            return resolutionTime;
+        });
+
+        // Calcular el tiempo promedio de resolución
+        const totalResolutionTime = resolutionTimes.reduce((total, time) => total + time, 0);
+        const averageResolutionTime = resolutionTimes.length > 0 ? totalResolutionTime / resolutionTimes.length : 0;
+
+        res.json({ averageResolutionTime: averageResolutionTime });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error al calcular el tiempo promedio de resolución." });
     }
 });
 
