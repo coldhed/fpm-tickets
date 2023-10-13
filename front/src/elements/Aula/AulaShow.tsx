@@ -1,4 +1,4 @@
-import { DeleteButton, DeleteWithConfirmButton, ListButton, Show, SimpleShowLayout, TextField, TopToolbar, useRecordContext } from 'react-admin';
+import { ReferenceArrayField, Datagrid, List, ReferenceField, EmailField, usePermissions, useLogout, CreateButton, ExportButton, ShowButton, ArrayField, CardContentInner, SimpleForm, DeleteButton, DeleteWithConfirmButton, ListButton, Show, SimpleShowLayout, TextField, TopToolbar, useRecordContext } from 'react-admin';
 import { Stack } from '@mui/material';
 import ArrowBack from "@mui/icons-material/ArrowBack";
 
@@ -11,22 +11,18 @@ const PostTitle = () => {
 const ConfirmTitle = () => {
     const record = useRecordContext();
     if (!record) return null;
-    return <span>Borrar {record.ciudad}?</span>;
+    return <span>Borrar {record.nombre}?</span>;
 };
 
 export const AulaShow = () => (
     <Show title={<PostTitle />}>
-        <SimpleShowLayout>
-                <TextField source="nombre" label="Nombre" />
-                <TextField source="ciudad" label="Ciudad" />
-                <TextField source="esatdo" label="Estado" />
-                <TextField source="CP" label="Codigo Postal" />
-                <TextField source="calle" label="Calle" />
+        <SimpleShowLayout >
+            <TextField source="_id" />
 
-            <Stack direction="row" spacing={10}>
+            {/* <Stack direction="row" spacing={10}>
                 <ListButton label="Regresar" icon={<ArrowBack />} color="inherit" />
                 <DeleteWithConfirmButton label="Borrar" confirmTitle={<ConfirmTitle />} />
-            </Stack>
+            </Stack> */}
         </SimpleShowLayout>
     </Show>
 );

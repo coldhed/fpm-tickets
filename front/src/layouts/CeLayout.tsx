@@ -28,9 +28,8 @@ export const CeLayout = () => {
             />
             <Resource name="Usuarios" list={UserList} create={UserCreate} show={UserShow} />
 
-            <Resource name="Aula" list={AulaList} create={AulaCreate} show={AulaShow}/>
+            <Resource name="Aula" list={AulaList} create={AulaCreate}/>
 
-            {/* <Resource name="Aulas" list={AulaList} create={AulaCreate} show={AulaShow} /> */}
         </>
     );
 };
