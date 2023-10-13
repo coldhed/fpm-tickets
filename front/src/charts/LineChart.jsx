@@ -26,7 +26,7 @@ ChartJS.register(
 
 
 
-export default function LinesChart() {
+export default function LineChart() {
     const [frecuencia, setFrecuencia] = useState([]);
     const [categoria, setCategoria] = useState([]);
 

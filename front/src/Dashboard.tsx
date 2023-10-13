@@ -1,4 +1,5 @@
-import LineChart from "../src/charts/LinesChart";
+import LineChart from "../src/charts/LineChart";
+import AulaMasIncidentes from "./charts/AulaMasIncidentes";
 
 // import BarsChart from "./BarsChart";
 // import PiesChart from "./PiesChart";
@@ -17,7 +18,7 @@ function Dashboard() {
             <div>
                 <p className="m-2"> Gráfico de líneas básico </p>
                 <div className="bg-light mx-auto px-2 border border-2 border-primary" style={{width:"450px", height:"230px"}}>
-                    <LineChart2 />
+                    <AulaMasIncidentes />
                 </div>
             </div>
 
