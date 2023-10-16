@@ -1,6 +1,5 @@
+import {CreateButton, Toolbar, SaveButton, DateField, SelectInput, TextInput, SimpleForm, Create, required, FormDataConsumer } from "react-admin";
 import { useEffect, useState } from "react";
-import { Create, CreateButton, FormDataConsumer, SaveButton, SelectInput, SimpleForm, TextInput, Toolbar, required } from "react-admin";
-
 
 const CreateToolbar = (props: any) => (
     <Toolbar {...props}>
@@ -9,42 +8,56 @@ const CreateToolbar = (props: any) => (
 )
 
 export const AulaCreate = (props: any) => {
-    const [coor_nac, setCoor_nac] = useState([]);
+    const [nomCoor, setCoor] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
-    async function fetchCoor_nac() {
-        const request = new Request("https://127.0.0.1:4000/Usuarios/cn", {
+    async function fetchnomCoor() {
+        const request = new Request("https://127.0.0.1:4000/Usuarios/correo", {
             method: "GET",
-            headers: new Headers({ Authentication: localStorage.getItem("auth") as string }),
+            headers: new Headers({ Authentication: localStorage.getItem("auth") as string}),
         });
 
         try {
             let response = await fetch(request);
-
+            console.log(await response.json)
             let data = await response.json();
-
-            setCoor_nac(data);
+      
+            setCoor(data);
             setIsLoading(false);
-        } catch (error) {
+          }
+          catch(error){
             console.log(error);
-        }
+          }
     }
 
     useEffect(() => {
         if (isLoading) {
-            fetchCoor_nac();
+          fetchnomCoor();
         }
-    }, [isLoading])
+      }, [isLoading])
 
     return (
+        
         <Create {...props}>
-            <SimpleForm toolbar={<CreateToolbar />}>
-                <TextInput source="nombre" label="Nombre" />
-                <TextInput source="coor_aula" label="Coordinador" />
-                <TextInput source="ciudad" label="Ciudad" />
-                <TextInput source="esatdo" label="Estado" />
-                <TextInput source="CP" label="Codigo Postal" />
-                <TextInput source="calle" label="Calle" />
+            <SimpleForm title="Crear Aula" toolbar={<CreateToolbar />}>
+                <TextInput source="nombre" label="Nombre Aula" validate={[required('Campo Obligatorio')]}/>
+                <FormDataConsumer>
+                    {({ formData, ...rest }) => {
+                        return (
+                            <SelectInput
+                                source="Usuarios"
+                                label="Coordinador"
+                                isLoading={isLoading}
+                                choices={nomCoor}
+                                validate={[required('Campo Obligatorio')]}
+                            />
+                        ); 
+                    }}
+                </FormDataConsumer>
+                <TextInput source="ciudad" label="Ciudad" validate={[required('Campo Obligatorio')]} />
+                <TextInput source="esatdo" label="Estado" validate={[required('Campo Obligatorio')]}/>
+                <TextInput source="CP" label="Codigo Postal" validate={[required('Campo Obligatorio')]}/>
+                <TextInput source="calle" label="Calle" validate={[required('Campo Obligatorio')]}/>
                 
             </SimpleForm>
         </Create>
@@ -53,7 +66,7 @@ export const AulaCreate = (props: any) => {
 
 // "_id": "6528672852adaf594cea4f33",
 //     "nombre": "Aula 1 - Colegio Occidente",
-//     "coor_aula": "651221e905e2d70aed0d4f95",
+//     "coor_aula": "mariel@fpm.mx",
 //     "ciudad": "Ciudad Obregón",
 //     "esatdo": "Sonora",
 //     "CP": "189",

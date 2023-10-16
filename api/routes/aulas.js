@@ -1,11 +1,10 @@
 import { Router } from 'express';
 import { connectDB } from '../db.js';
+import { ObjectId } from 'mongodb';
 import { createNewAula } from '../helpers/aulas.js';
 import jwt from 'jsonwebtoken';
 
 const router = Router();
-
-
 
 router.get("/", async (req, res) => {
     let db = await connectDB();
@@ -85,8 +84,37 @@ router.get("/ciudad", async (req, res) => {
 router.get("/:id", async (req, res) => {
     let db = await connectDB();
 
-    let data = await db.collection('Aula').find({ "id": Number(req.params.id) }).project({ _id: 0 }).toArray();
-    res.json(data[0]);
+    console.log(req.params.id)
+
+    let data = await db.collection('Aula').findOne({ "_id": new ObjectId(req.params.id) });
+
+    console.log(data)
+
+    data["id"] = data["_id"];
+    delete data["_id"];
+
+    res.json(data);
+})
+
+//AulaCreate
+router.post("/", async (request, res) => {
+    // console.log(request.body)
+
+    let db = await connectDB();
+    let addValue = request.body
+    let data = await db.collection('Aula').insertOne(addValue);
+    res.json(data);
+})
+
+// delete
+router.delete("/:id", async (req, res) => {
+    let db = await connectDB();
+
+    let data = await db.collection('Aula').deleteOne({ "_id": new ObjectId(req.params.id) });
+    data["id"] = data["_id"];
+    delete data["_id"];
+
+    res.json(data);
 })
 
 export default router;
