@@ -26,7 +26,7 @@ const headerStyle = "text-xl font-bold pb-1 pt-4 text-[#c22032]"
 export const UserShow = () => (
     <Show title={<PostTitle />} className="mt-4 mr-[8rem] ml-12">
         <SimpleShowLayout >
-            <div className="flex flex-col justify-center px-8 py-4">
+            <div className="px-8 py-4">
                 <p className={headerStyle} >Nombre Completo</p>
                 <TextField source="nombre_completo" label="" />
                 <p className={headerStyle} >Correo</p>
