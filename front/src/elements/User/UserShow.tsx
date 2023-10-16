@@ -21,18 +21,20 @@ const ConfirmTitle = () => {
     return <span>Borrar {record.correo}?</span>;
 };
 
+const headerStyle = "text-xl font-bold pb-1 pt-4 text-[#c22032]"
+
 export const UserShow = () => (
-    <Show title={<PostTitle />} className="mt-4 mr-[8rem]">
+    <Show title={<PostTitle />} className="mt-4 mr-[8rem] ml-12">
         <SimpleShowLayout >
             <div className="flex flex-col justify-center px-8 py-4">
-                <p>Nombre Completo</p>
+                <p className={headerStyle} >Nombre Completo</p>
                 <TextField source="nombre_completo" label="" />
-                <p>Correo</p>
+                <p className={headerStyle} >Correo</p>
                 <TextField source="correo" label="" />
-                <p>Rol</p>
+                <p className={headerStyle} >Rol</p>
                 <TextField source="rol" label="" />
 
-                <Stack direction="row" spacing={10}>
+                <Stack direction="row" spacing={10} className="pt-9">
                     <ListButton label="Regresar" icon={<ArrowBack />} color="inherit" />
                     <DeleteWithConfirmButton label="Borrar" confirmTitle={<ConfirmTitle />} />
                 </Stack>
