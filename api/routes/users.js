@@ -13,6 +13,8 @@ const router = Router();
 
 //     response.json(data);
 // })
+
+
 router.get("/cn", async (req, res) => {
     try {
         let token = req.get("Authentication");
@@ -27,6 +29,21 @@ router.get("/cn", async (req, res) => {
         // auth failed
         res.sendStatus(401);
     }
+})
+
+router.get("/correo", async (req, res) => {
+    let db = await connectDB();
+    let users = await db.collection("Usuarios").find({}).project({_id: 1, correo: 1}).toArray();
+    
+    users.map((user) => {
+        user["id"] = user["_id"];
+        delete user["_id"];
+        
+        user["name"] = user["correo"];
+        delete user["correo"];
+
+    })
+    res.json(users);
 })
 
 // get many
