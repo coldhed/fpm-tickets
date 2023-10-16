@@ -40,22 +40,22 @@ export const UserCreate = (props: any) => {
         <Create {...props} className="mt-4 mr-[8rem] ml-12">
             <SimpleForm toolbar={<CreateToolbar />}>
                 <div className="px-8 py-4 grid grid-cols-2 gap-14 ">
-                    <div className="justify-self-end">
+                    <div>
                         <p className={headerStyle}>Nombre Completo</p>
                         <TextInput source="nombre_completo" label="" />
                     </div>
 
-                    <div className="justify-self-start">
+                    <div>
                         <p className={headerStyle}>Correo</p>
                         <TextInput source="correo" label="" />
                     </div>
 
-                    <div className="justify-self-end">
+                    <div>
                         <p className={headerStyle}>Contraseña</p>
                         <TextInput source="contrasena" label="" />
                     </div>
 
-                    <div className="justify-self-start">
+                    <div>
                         <p className={headerStyle}>Rol</p>
                         <SelectInput source="rol" label="" defaultValue="ca" validate={required()} choices={[
                             { id: 'ca', name: 'Coordinador de Aula' },
@@ -63,7 +63,8 @@ export const UserCreate = (props: any) => {
                             { id: 'ce', name: 'Coordinador Ejecutivo' },
                         ]} />
                     </div>
-                    <div className="justify-self-end">
+
+                    <div>
                         <p className={headerStyle}>Coordinador Nacional</p>
                         <FormDataConsumer>
                             {({ formData, ...rest }) => {
