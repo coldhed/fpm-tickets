@@ -1,5 +1,6 @@
 import { Line } from 'react-chartjs-2';
 import { useEffect, useState } from "react";
+import { chartContainerStyle, chartStyle, chartTitleStyle } from '../styles/ChartStyles';
 
 import {
     Chart as ChartJS,
@@ -57,7 +58,7 @@ export default function AulaMasIncidentes() {
             aulaChart();
     })
 
-    var midata = {
+    const midata = {
         labels: aula,
         datasets: [ 
             {
@@ -65,23 +66,37 @@ export default function AulaMasIncidentes() {
                 data: frecuencia,
                 tension: 0.5,
                 fill : true,
-                borderColor: 'rgb(255, 99, 132)',
-                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                backgroundColor: 'rgb(195,45,51,0.5)', // Rojo
+                borderColor: 'rgb(195,45,51)', // Rojo
                 pointRadius: 5,
-                pointBorderColor: 'rgba(255, 99, 132)',
-                pointBackgroundColor: 'rgba(255, 99, 132)',
+                pointBorderColor: 'rgb(195,45,51)',
+                pointBackgroundColor: 'rgb(195,45,51)',
             },
         ],
+    };
+
+    const xAxisOptions = {
+        type: 'linear', // Asegura que el eje x sea lineal
+        min: 0, // Establece el valor mínimo en 0
+        max: Math.max(...frecuencia) + 10, // Ajusta el valor máximo según tus datos
+    };
+      
+    const options = {
+        scales: {
+          x: [xAxisOptions], // Aplica las opciones del eje x
+          y: {
+            beginAtZero: true,
+          },
+        },
     };
     
 
     return (
-        <div>
-
-            <Line data={midata} />
-
+        <div style={chartContainerStyle}>
+          <p style={chartTitleStyle}>Aulas con reportes</p>
+          <Line data={midata} options={options} />
         </div>
-    )
+    );
 
 
 

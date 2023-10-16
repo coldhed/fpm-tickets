@@ -1,6 +1,7 @@
 import React from 'react';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
+import { chartStyle, chartTitleStyle, chartContainerStyle } from '../styles/ChartStyles';
 
 
 // import { Line } from 'react-chartjs-2';
@@ -73,27 +74,14 @@ export default function WeeklyStatus() {
             {
                 label: 'Aula con más y menos reportes',
                 data: frecuencia,
-                // tension: 0.5,
-                // fill : true,
-                // borderColor: 'rgb(255, 99, 132)',
-                // backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                // pointRadius: 5,
-                // pointBorderColor: 'rgba(255, 99, 132)',
-                // pointBackgroundColor: 'rgba(255, 99, 132)',
                 backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                ],
+                    'rgb(68,150,64, 0.5)', // Verde
+                    'rgb(195,45,51, 0.5)', // Rojo
+                  ],
                 borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                ],
+                    'rgb(68,150,64,1)', // Verde
+                    'rgb(195,45,51,1)', // Rojo
+                  ],
                 borderWidth: 1,
             },
         ],
@@ -101,12 +89,11 @@ export default function WeeklyStatus() {
     
 
     return (
-        <div>
-
-            <Pie data={midata} />
-
+        <div style={chartContainerStyle}>
+          <p style={chartTitleStyle}>Estado de los Reportes</p>
+          <Pie data={midata} />
         </div>
-    )
+    );
 
 
 

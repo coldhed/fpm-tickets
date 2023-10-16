@@ -1,5 +1,6 @@
 import { Line } from 'react-chartjs-2';
 import { useEffect, useState } from "react";
+import { chartStyle, chartTitleStyle, chartContainerStyle } from '../styles/ChartStyles';
 
 import {
     Chart as ChartJS,
@@ -57,31 +58,46 @@ export default function LineChart() {
             lineChartData();
     })
 
-    var midata = {
+    const midata = {
         labels: categoria,
-        datasets: [ 
-            {
-                label: 'Categorías más reportadas',
-                data: frecuencia,
-                tension: 0.5,
-                fill : true,
-                borderColor: 'rgb(255, 99, 132)',
-                backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                pointRadius: 5,
-                pointBorderColor: 'rgba(255, 99, 132)',
-                pointBackgroundColor: 'rgba(255, 99, 132)',
-            },
+        datasets: [
+          {
+            label: 'Categorías más y menos reportadas',
+            data: frecuencia,
+            tension: 0.5,
+            fill: true,
+            borderColor: 'rgb(68,150,64)',
+            backgroundColor: 'rgb(68,150,64,0.5)',
+            pointRadius: 5,
+            pointBorderColor: 'rgb(68,150,64)',
+            pointBackgroundColor: 'rgb(68,150,64)',
+          },
         ],
     };
+      
+    const xAxisOptions = {
+        type: 'linear', // Asegura que el eje x sea lineal
+        min: 0, // Establece el valor mínimo en 0
+        max: Math.max(...frecuencia) + 10, // Ajusta el valor máximo según tus datos
+    };
+      
+    const options = {
+        scales: {
+          x: [xAxisOptions], // Aplica las opciones del eje x
+          y: {
+            beginAtZero: true,
+          },
+        },
+    };
+      
     
 
     return (
-        <div>
-
-            <Line data={midata} />
-
+        <div style={chartContainerStyle}>
+          <p style={chartTitleStyle}>Categorías reportadas</p>
+          <Line data={midata} options={options} />
         </div>
-    )
+      );
 
 
 
