@@ -8,7 +8,7 @@ const CreateToolbar = (props: any) => (
 )
 
 export const UserCreate = (props: any) => {
-    const headerStyle = "text-xl font-bold pb-1 pt-3 text-[#c22032]"
+    const headerStyle = "text-xl font-bold  pt-1 text-[#c22032]"
     const [coor_nac, setCoor_nac] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -39,7 +39,7 @@ export const UserCreate = (props: any) => {
     return (
         <Create {...props} className="mt-4 mr-[8rem] ml-12">
             <SimpleForm toolbar={<CreateToolbar />}>
-                <div className="px-8 py-4 grid grid-cols-2 gap-14 ">
+                <div className="px-8 py-4 grid grid-cols-2 gap-y-7 gap-x-14 ">
                     <div>
                         <p className={headerStyle}>Nombre Completo</p>
                         <TextInput source="nombre_completo" label="" />
