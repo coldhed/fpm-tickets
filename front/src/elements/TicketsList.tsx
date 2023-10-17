@@ -1,4 +1,4 @@
-import {List, Datagrid, TextField,EditButton, DateField } from "react-admin";
+import { List, Datagrid, TextField, EditButton, DateField, ListProps, useListContext, useRecordContext } from "react-admin";
 import Visibility from "@mui/icons-material/Visibility";
 import { FilterLiveSearch, FilterList, FilterListItem } from 'react-admin';
 import { Card, CardContent } from '@mui/material';
@@ -9,7 +9,7 @@ import '../CSS/TicketCreate.css';
 export const PostFilterSidebar = () => (
     <Card sx={{ order: -1, mr: 2, mt: 9, width: 200 }}>
         <CardContent>
-        <FilterLiveSearch source="titulo" label="TÍTULO" />
+            <FilterLiveSearch source="titulo" label="TÍTULO" />
             <FilterList label="PRIORIDAD" icon={<PriorityHighRoundedIcon />}>
                 <FilterListItem label="Alta" value={{ prioridad: "Alta" }} />
                 <FilterListItem label="Media" value={{ prioridad: "Media" }} />
@@ -25,68 +25,81 @@ export const PostFilterSidebar = () => (
 );
 
 const CustomEditButton = () => (
-    <button className="middle none center mr-3 rounded-lg border custom-border-color py-3 px-6 font-sans text-xs font-bold uppercase text-pink-500 transition-all hover:opacity-75 focus:ring focus:ring-pink-200 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">        <EditButton 
-            label="Visualizar Ticket" 
-            icon={<Visibility/>}
-        />
+    <button className="middle none center mr-3 rounded-lg border custom-border-color py-3 px-6 font-sans text-xs font-bold uppercase text-pink-500 transition-all hover:opacity-75 focus:ring focus:ring-pink-200 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">        <EditButton
+        label="Visualizar Ticket"
+        icon={<Visibility />}
+    />
     </button>
-    
+
 );
 
 const InicioTextComponent = () => (
     <div className="text-xs font-bold">
-      <p>Inicio: </p>
+        <p>Inicio: </p>
     </div>
 );
 
 const PrioridadTextComponent = () => (
     <div className="text-xs font-bold">
-      <p>Prioridad: </p>
+        <p>Prioridad: </p>
     </div>
 );
 const EstatusTextComponent = () => (
     <div className="text-xs font-bold">
-      <p> Estatus: </p>
+        <p> Estatus: </p>
     </div>
 );
 
-type TicketListProps = {
-    record: {
-      prioridad: string;
-    };
+type Ticket = {
+    id: string;
+    prioridad: string;
+};
+
+const PriorityColor = () => {
+    const record = useRecordContext<Ticket>();
+    return (
+        <span
+            className={priorityClassColor(record.prioridad)}
+        >
+            {record.prioridad}
+        </span>
+    )
+}
+
+export const TicketList = (props: ListProps) => {
+    const { data } = useListContext<Ticket>();
+    console.log(data)
+
+    return (
+        <List aside={<PostFilterSidebar />}>
+            <div>
+                <Datagrid>
+                    <TextField source="titulo" label="Título" />
+                    <div className="relative inline-block px-3 py-1 font-semibold leading-tight">
+                        <div className="inset-0 opacity-60">
+                            <PriorityColor />
+                        </div>
+                    </div>
+                    <TextField source="estatus" label="Estatus" />
+                    <DateField source="inicio" label="Fecha de creación" />
+                    <CustomEditButton />
+                </Datagrid>
+            </div>
+        </List>
+    )
 };
 
 
-export const TicketList = ({ record }: TicketListProps) => (
-    <List aside={<PostFilterSidebar />}>
-      <div>
-        <Datagrid>
-          <TextField source="titulo" label="Título" />
-          <div className="relative inline-block px-3 py-1 font-semibold leading-tight">
-            <div className="absolute inset-0 opacity-50 rounded-full">
-              <TextField source="prioridad" label="Prioridad" />
-              <span
-                className={classNames({
-                  'bg-red-200 text-red-900': record.prioridad === 'Alta',
-                  'bg-yellow-200 text-yellow-900': record.prioridad === 'Media',
-                  'bg-green-200 text-green-900': record.prioridad === 'Baja',
-                })}
-              >
-                {record.prioridad}
-              </span>
-            </div>
-          </div>
-          <TextField source="estatus" label="Estatus" />
-          <DateField source="inicio" label="Fecha de creación" />
-          <CustomEditButton />
-        </Datagrid>
-      </div>
-    </List>
-  );
-
-
-
-function classNames(arg0: { 'bg-red-200 text-red-900': boolean; 'bg-yellow-200 text-yellow-900': boolean; 'bg-green-200 text-green-900': boolean; }): string | undefined {
-    throw new Error("Function not implemented.");
+function priorityClassColor(prioridad: string) {
+    switch (prioridad) {
+        case 'Alta':
+            return 'bg-red-200 text-red-900 py-1 px-2 rounded-full';
+        case 'Media':
+            return 'bg-yellow-200 text-yellow-900 py-1 px-2 rounded-full';
+        case 'Baja':
+            return 'bg-green-200 text-green-900 py-1 px-2 rounded-full';
+        default:
+            return "";
+    }
 }
 
