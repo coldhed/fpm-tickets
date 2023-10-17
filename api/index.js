@@ -4,8 +4,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import { ENV, PORT } from "./const.js"
-import { connectDB } from './db.js';
-import { usersRouter, ticketRouter, aulasRouter} from "./routes/routes.js"
+import { connectDB } from './util.js';
+import { usersRouter, ticketRouter, aulasRouter } from "./routes/routes.js"
 
 // const bodyParser = require("body-parser") //NUEVO
 

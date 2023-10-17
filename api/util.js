@@ -30,12 +30,14 @@ async function logDB(action, user) {
     await db.collection('logs').insertOne(log);
 }
 
-async function Authenticate(req, res, next) {
+// middleware that takes a set of possible roles for that endpoint
+// and checks if the user has one of those roles
+const authenticate = (roles = new Set(["ce", "cn", "ca"])) => (req, res, next) => {
     try {
         let token = req.get("Authentication");
         let verifiedToken = jwt.verify(token, process.env.JWT_SECRET);
 
-        if (verifiedToken.rol != "ce") {
+        if (!roles.has(verifiedToken.rol)) {
             return res.sendStatus(401);
         }
 
@@ -45,4 +47,4 @@ async function Authenticate(req, res, next) {
     }
 }
 
-export { connectDB, logDB }
+export { connectDB, logDB, authenticate }

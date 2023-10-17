@@ -1,4 +1,4 @@
-import { connectDB } from "../db.js";
+import { connectDB } from "../util.js";
 
 async function createNewAula(nombre, coor_aula, direccion, ciudad, estado, codigo_postal, calle) {
 
