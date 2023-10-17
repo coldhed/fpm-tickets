@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Create, CreateButton, FormDataConsumer, SaveButton, SelectInput, SimpleForm, TextInput, Toolbar, required } from "react-admin";
+import Grid from '@mui/material/Grid';
 
 const CreateToolbar = (props: any) => (
     <Toolbar {...props}>
@@ -37,51 +38,65 @@ export const UserCreate = (props: any) => {
     }, [isLoading])
 
     return (
-        <Create {...props} className="mt-4 mr-[8rem] ml-12">
-            <SimpleForm toolbar={<CreateToolbar />}>
-                <div className="px-8 py-4 grid grid-cols-2 gap-y-7 gap-x-14 ">
-                    <div>
-                        <p className={headerStyle}>Nombre Completo</p>
-                        <TextInput source="nombre_completo" label="" />
+        <Create {...props}>
+            <div className="relative flex flex-col items-center rounded-[20px] w-[1200px] max-w-[95%] mx-auto bg-neutral-200 bg-clip-border shadow-3xl shadow-shadow-500 dark:!bg-navy-800 dark:text-white dark:!shadow-none p-3">
+                
+                <SimpleForm toolbar={<CreateToolbar />}>
+                    <Grid container spacing={2}>
+                    <div className="full-width-input flex flex-col items-start justify-center rounded-2xl bg-white bg-clip-border px-3 py-4 shadow-3xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
+                        <TextInput source="nombre_completo" className="full-width-input" validate={[required('Campo Obligatorio')]} />
+                    </div>
+                    <div className="full-width-input flex flex-col items-start justify-center rounded-2xl  bg-clip-border px-3 py-4 shadow-3xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
                     </div>
 
-                    <div>
-                        <p className={headerStyle}>Correo</p>
-                        <TextInput source="correo" label="" />
+                    <div className="grid grid-cols-5 gap-0 px-2 w-full">
+
                     </div>
 
-                    <div>
-                        <p className={headerStyle}>Contraseña</p>
-                        <TextInput source="contrasena" label="" />
+                    <div className="full-width-input flex flex-col items-start justify-center rounded-2xl bg-white bg-clip-border px-3 py-4 shadow-3xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
+                        <TextInput source="correo" className="full-width-input" validate={[required('Campo Obligatorio')]} />
+                    </div>
+                    <div className="full-width-input flex flex-col items-start justify-center rounded-2xl  bg-clip-border px-3 py-4 shadow-3xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
                     </div>
 
-                    <div>
-                        <p className={headerStyle}>Rol</p>
-                        <SelectInput source="rol" label="" defaultValue="ca" validate={required()} choices={[
+                    <div className="full-width-input flex flex-col items-start justify-center rounded-2xl bg-white bg-clip-border px-3 py-4 shadow-3xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
+                        <TextInput source="contrasena" label="Contraseña" className="full-width-input" validate={[required('Campo Obligatorio')]} />
+                    </div>
+                    <div className="full-width-input flex flex-col items-start justify-center rounded-2xl  bg-clip-border px-3 py-4 shadow-3xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
+                    </div>
+
+                    <div className="full-width-input flex flex-col items-start justify-center rounded-2xl bg-white bg-clip-border px-3 py-4 shadow-3xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
+                        <SelectInput source="rol" label="Rol" defaultValue="ca" className="full-width-input" validate={required()} choices={[
                             { id: 'ca', name: 'Coordinador de Aula' },
                             { id: 'cn', name: 'Coordinador Nacional' },
                             { id: 'ce', name: 'Coordinador Ejecutivo' },
                         ]} />
                     </div>
-
-                    <div>
-                        <p className={headerStyle}>Coordinador Nacional</p>
-                        <FormDataConsumer>
-                            {({ formData, ...rest }) => {
-                                return (
-                                    <SelectInput
-                                        source="coor_nac"
-                                        label=""
-                                        disabled={formData.rol !== 'ca'}
-                                        isLoading={isLoading}
-                                        choices={formData.rol === 'ca' ? coor_nac : []}
-                                    />
-                                );
-                            }}
-                        </FormDataConsumer>
+                    <div className="full-width-input flex flex-col items-start justify-center rounded-2xl  bg-clip-border px-3 py-4 shadow-3xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
                     </div>
-                </div>
-            </SimpleForm>
+
+                    <FormDataConsumer>
+                        {({ formData, ...rest }) => formData.rol === 'ca' && (
+
+                            <div className="full-width-input flex flex-col items-start justify-center rounded-2xl bg-white bg-clip-border px-3 py-4 shadow-3xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
+                                <SelectInput
+                                    source="coor_nac"
+                                    label="Coordinador Nacional"
+                                    className="full-width-input"
+                                    choices={formData.rol === 'ca' ? coor_nac : []}
+                                    validate={[required('Campo Obligatorio')]}
+                                    {...rest}
+                                />
+                            </div>
+
+
+                        )}
+                    </FormDataConsumer>
+                    
+                    </Grid>
+                </SimpleForm>
+            </div>
+
         </Create >
     );
 }
