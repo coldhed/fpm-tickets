@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { authenticate } from '../util.js';
+import { authenticate, logDB } from '../util.js';
 import { createNewUser, doLogin, getMany, getCNs, deleteUser, getOne } from '../helpers/users.js';
 import jwt from 'jsonwebtoken';
 
@@ -11,18 +11,21 @@ router.get("/cn", authenticate(new Set(["ce"])), async (req, res) => {
     await getCNs(req, res);
 })
 
-router.get("/correo", async (req, res) => {
+
+router.get("/correo", authenticate(new Set(["ce"])), async (req, res) => {
     let db = await connectDB();
-    let users = await db.collection("Usuarios").find({}).project({_id: 1, correo: 1}).toArray();
-    
+    let users = await db.collection("Usuarios").find({}).project({ _id: 1, correo: 1 }).toArray();
+
     users.map((user) => {
         user["id"] = user["_id"];
         delete user["_id"];
-        
+
         user["name"] = user["correo"];
         delete user["correo"];
 
     })
+
+    logDB("get all emails", req.userRequesting);
     res.json(users);
 })
 
