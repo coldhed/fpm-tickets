@@ -1,4 +1,4 @@
-import { connectDB } from "../db.js";
+import { connectDB } from "../util.js";
 
 async function createNewTicket(titulo, categoria, aula, prioridad, resolucion, estatus) {
 

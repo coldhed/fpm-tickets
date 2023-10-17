@@ -23,7 +23,9 @@ import myTheme from "./myTheme";
 import { CeLayout } from "./layouts/CeLayout";
 import { CaLayout } from "./layouts/CaLayout";
 
-const MyLayout = (props: any) => <Layout {...props} appBar={MyAppBar} />;
+
+import { MyLayout } from './MyLayout';
+
 
 export const App = () => (
 
