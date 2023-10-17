@@ -44,7 +44,6 @@ async function createNewUser(req, res) {
             newUser["contrasena"] = hash;
 
             let data = await db.collection("Usuarios").insertOne(newUser);
-            console.log(newUser);
             logDB(`create new user ${newUser.correo} successful`, userRequesting);
             return res.json(data);
         } catch {

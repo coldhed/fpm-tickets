@@ -21,6 +21,9 @@ app.use(cors());
 app.use(
     mongoSanitize({
         replaceWith: '_',
+        onSanitize: ({ req, key }) => {
+            console.warn(`This request[${key}] is sanitized`, req);
+        },
     }),
 );
 
