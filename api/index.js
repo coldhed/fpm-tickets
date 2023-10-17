@@ -1,11 +1,10 @@
 import express from "express"
 import cors from "cors"
 import dotenv from 'dotenv';
+import mongoSanitize from 'express-mongo-sanitize';
 
 import https from "https";
 import fs from "fs";
-// const fs = require("fs")
-
 
 dotenv.config();
 
@@ -14,13 +13,17 @@ import { connectDB } from './util.js';
 import { usersRouter, ticketRouter, aulasRouter } from "./routes/routes.js"
 
 
-
-// const bodyParser = require("body-parser") //NUEVO
-
 const app = express();
 app.use(express.json());
 app.use(cors());
-// app.use(bodyParser.json()); //NUEVO
+
+// avoid nosql injection by replacing mongo prohibited chars with _
+app.use(
+    mongoSanitize({
+        replaceWith: '_',
+    }),
+);
+
 
 
 // default route
@@ -39,7 +42,7 @@ app.use("/Aula", aulasRouter)
 //     console.log("DB connected");
 // });
 
-https.createServer({cert: fs.readFileSync("backend.cer"), key: fs.readFileSync("backend.key")}, app).listen(4000, ()=>{
+https.createServer({ cert: fs.readFileSync("backend.cer"), key: fs.readFileSync("backend.key") }, app).listen(4000, () => {
     connectDB();
     // console.log("Servidor escuchando en puerto 1337")
     console.log("Server started");
