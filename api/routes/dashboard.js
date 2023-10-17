@@ -82,91 +82,6 @@ router.get("/tickets-per-aula", async (req, res) => {
     }
 });
 
-// tercera grafica
-// Numero de incidentes en proceso, abiertos y cerrados en la semana. 
-
-// router.get("/tickets-status-in-week", async (req, res) => {
-//     try {
-//         const db = await connectDB();
-        
-//         // Obtener la fecha de inicio de la semana actual
-//         const today = new Date();
-//         const startOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay());
-
-//         // Consulta para contar los tickets en cada estado dentro de la semana actual
-//         const ticketStatusInWeek = await db.collection('Tickets').aggregate([
-//             {
-//                 $match: {
-//                     estatus: {
-//                         $in: ["Abierto", "En proceso", "Cerrado"]
-//                     },
-//                     cierre: {
-//                         $gte: startOfWeek
-//                     }
-//                 }
-//             },
-//             {
-//                 $group: {
-//                     _id: "$estatus",
-//                     count: { $sum: 1 }
-//                 }
-//             }
-//         ]).toArray();
-
-//         // Organizar los datos en dos arrays: uno para los estados y otro para la cantidad de tickets en cada estado
-//         const statuses = [];
-//         const ticketCounts = [];
-        
-//         ticketStatusInWeek.forEach((entry) => {
-//             const status = entry._id;
-//             const ticketCount = entry.count;
-
-//             // Agregar el estado y el recuento a los arrays respectivos
-//             statuses.push(status);
-//             ticketCounts.push(ticketCount);
-//         });
-
-//         res.json({ statuses, ticketCounts });
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ error: "Error al obtener datos de tickets por estado en la semana." });
-//     }
-// });
-
-
-// 3 just closed
-// router.get("/closed-tickets", async (req, res) => {
-//     try {
-//         const db = await connectDB();
-
-//         // Consulta para contar los tickets en estado "Cerrado"
-//         const closedTickets = await db.collection('Tickets').aggregate([
-//             {
-//                 $match: {
-//                     estatus: "Cerrado"
-//                 }
-//             },
-//             {
-//                 $group: {
-//                     _id: null,
-//                     count: { $sum: 1 }
-//                 }
-//             }
-//         ]).toArray();
-
-//         // Extraer el recuento de tickets en estado "Cerrado"
-//         let closedTicketCount = 0;
-//         if (closedTickets.length > 0) {
-//             closedTicketCount = closedTickets[0].count;
-//         }
-
-//         res.json({ estatus: "Cerrado", ticketCount: closedTicketCount });
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ error: "Error al obtener datos de tickets en estado 'Cerrado'." });
-//     }
-// });
-
 // 3 three status
 
 router.get("/tickets-by-status", async (req, res) => {
@@ -209,40 +124,35 @@ router.get("/tickets-by-status", async (req, res) => {
 });
 
 
+
 // 4
-
-
 // promedio 
-router.get("/average-resolution-time", async (req, res) => {
+router.get("/tiempo-promedio-cierre", async (req, res) => {
     try {
         const db = await connectDB();
 
-        // Consulta para obtener los tickets con timestamps de inicio y fin
-        const ticketsWithTimestamps = await db.collection('Tickets').find({
-            inicio: { $exists: true },
-            cierre: { $exists: true }
-        }).toArray();
+        // Consulta para obtener los tickets en estado "Cerrado"
+        const ticketsCerrados = await db.collection('Tickets').find({estatus: "Cerrado"}).toArray();
 
-        // Calcular el tiempo de resolución para cada ticket
-        const resolutionTimes = ticketsWithTimestamps.map((ticket) => {
-            const startTime = new Date(ticket.inicio);
-            const endTime = new Date(ticket.cierre);
-            const resolutionTime = endTime - startTime;
-            return resolutionTime;
-        });
+        let totalTiempo = 0;
 
-        // Calcular el tiempo promedio de resolución
-        const totalResolutionTime = resolutionTimes.reduce((total, time) => total + time, 0);
-        const averageResolutionTime = resolutionTimes.length > 0 ? totalResolutionTime / resolutionTimes.length : 0;
+        for (const ticket of ticketsCerrados) {
+            const inicio = new Date(ticket.inicio);
+            const fin = new Date(ticket.fin);
+            totalTiempo += (fin - inicio);
+        }
 
-        res.json({ averageResolutionTime: averageResolutionTime });
+        const tiempoPromedio = totalTiempo / ticketsCerrados.length;
+        
+        const tiempoFinal = Math.floor(tiempoPromedio / 1000 / 60 / 60); // a horas
+
+
+        res.json({ tiempoFinal });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: "Error al calcular el tiempo promedio de resolución." });
+        res.status(500).json({ error: "Error al calcular el tiempo promedio de cierre de tickets." });
     }
 });
-
-
 
 
 export default router;
