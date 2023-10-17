@@ -1,4 +1,4 @@
-import { connectDB } from "../db.js";
+import { connectDB, logDB } from "../util.js";
 import { ObjectId } from "mongodb";
 import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken';
@@ -6,6 +6,7 @@ import { json } from "express";
 
 async function createNewUser(req, res) {
     let db = await connectDB();
+    let userRequesting = req.userRequesting;
 
     let newUser = req.body;
     newUser["last_login"] = Date();
@@ -19,10 +20,12 @@ async function createNewUser(req, res) {
             if (cn_data && cn_data.rol == "cn") {
                 newUser["coor_nac"] = coor_nac;
             } else {
+                logDB("create new user failed", userRequesting);
                 return res.sendStatus(400);
             }
         } else {
             // if you are creating a coor_aula you need to specity their coor_nac
+            logDB("create new user failed", userRequesting);
             return res.sendStatus(400);
         }
     }
@@ -41,12 +44,17 @@ async function createNewUser(req, res) {
             newUser["contrasena"] = hash;
 
             let data = await db.collection("Usuarios").insertOne(newUser);
+            console.log(newUser);
+            logDB(`create new user ${newUser.correo} successful`, userRequesting);
             return res.json(data);
         } catch {
             console.log("Problem hashing the password");
+
+            logDB("create new user failed", userRequesting);
             return res.sendStatus(500);
         }
     } else { // repeated user
+        logDB("create new user failed", userRequesting);
         return res.sendStatus(409);
     }
 }
@@ -64,13 +72,15 @@ async function doLogin(req, res) {
 
     let user = await db.collection("Usuarios").findOne({ "correo": email });
     if (user == null) { // user not found
+        await logDB("login failed", email);
         return res.sendStatus(401);
     }
 
     // compare pass to the stored hash
-    bcrypt.compare(password, user.contrasena, (error, result) => {
+    bcrypt.compare(password, user.contrasena, async (error, result) => {
         if (error) {
             console.log(error);
+            await logDB("login failed", email);
             return res.sendStatus(500);
         }
 
@@ -93,8 +103,10 @@ async function doLogin(req, res) {
                 "fullName": user.nombre_completo,
                 "rol": user.rol,
             });
+            await logDB("login successful", email);
         } else {
             // wrong password
+            await logDB("login failed", email);
             return res.sendStatus(401);
         }
     });
@@ -105,6 +117,8 @@ async function getMany(req, res) {
     const { _sort, _order, _start, _end, id } = req.query;
 
     let db = await connectDB();
+
+    let userRequesting = req.userRequesting;
 
     let users = [];
 
@@ -165,12 +179,14 @@ async function getMany(req, res) {
         }
 
     }
-
+    logDB("get all users", userRequesting)
     res.json(users);
 }
 
 async function getOne(req, res) {
     let db = await connectDB();
+
+    let userRequesting = req.userRequesting;
 
     let user = await db.collection("Usuarios").findOne({ "_id": new ObjectId(req.params.id) }, { projection: { contrasena: 0 } });
 
@@ -193,11 +209,13 @@ async function getOne(req, res) {
             break;
     }
 
+    logDB(`get one user: ${user.correo}`, userRequesting);
     res.json(user);
 }
 
 async function getCNs(req, res) {
     let db = await connectDB();
+    let userRequesting = req.userRequesting;
 
     let users = await db.collection("Usuarios").find({ "rol": "cn" }).project({ _id: 1, correo: 1 }).toArray();
 
@@ -209,20 +227,24 @@ async function getCNs(req, res) {
         delete user["correo"];
     })
 
+    logDB("get all CNs", userRequesting);
     res.json(users);
 }
 
 async function deleteUser(req, res) {
     let db = await connectDB();
+    let userRequesting = req.userRequesting;
 
     let user = await db.collection("Usuarios").findOne({ "_id": new ObjectId(req.params.id) });
 
     if (user == null) {
+        logDB("delete user failed: user not found", userRequesting);
         return res.sendStatus(404);
     }
 
     let data = await db.collection("Usuarios").deleteOne({ "_id": new ObjectId(req.params.id) });
 
+    logDB(`delete user: ${user.correo}`, userRequesting)
     return res.json(data);
 }
 

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { connectDB } from '../db.js';
+import { connectDB } from '../util.js';
 
 
 const router = Router();
@@ -20,7 +20,7 @@ router.get("/", async (req, res) => {
         let sorter = {} // no puedo aladir un avariable como nombre salvo así
         sorter[sortBy] = sortOrder
 
-        data = await db.collection("Categorias").find({}).sort(sorter).project({ }).toArray();
+        data = await db.collection("Categorias").find({}).sort(sorter).project({}).toArray();
 
         res.set("Access-Control-Expose-Headers", "X-Total-Count"); //los headers de la respuesta
         res.set("X-Total-Count", data.length);
@@ -31,13 +31,13 @@ router.get("/", async (req, res) => {
 
 
         for (let index = 0; index < request.query.id.length; index++) { //recorremos el array de ids
-            let dataObtain = await db.collection('Categorias').find({ id: Number(request.query.id[index]) }).project({ }).toArray(); // sacamos el valor del index y luego la proyección
+            let dataObtain = await db.collection('Categorias').find({ id: Number(request.query.id[index]) }).project({}).toArray(); // sacamos el valor del index y luego la proyección
             data = await data.concat(dataObtain)
         }
-        
+
     } else { //Reference -> datos que me pide el query 
-        
-        data = await db.collection('Categorias').find(request.query).project({ }).toArray();
+
+        data = await db.collection('Categorias').find(request.query).project({}).toArray();
         res.set('Access-Control-Expose-Headers', 'X-Total-Count')
         res.set('X-Total-Count', data.length)
     }
