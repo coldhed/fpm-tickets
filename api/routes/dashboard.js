@@ -9,6 +9,7 @@ const router = Router();
 router.get("/category-usage", async (req, res) => {
     try {
         const db = await connectDB();
+        // Hello
 
         // Agregar lógica para consultar la base de datos y obtener el recuento de uso de categorías
         const categoryUsage = await db.collection('Tickets').aggregate([
