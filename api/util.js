@@ -1,4 +1,5 @@
 import { MongoClient } from 'mongodb'
+import jwt from 'jsonwebtoken';
 
 
 let db;
@@ -40,6 +41,9 @@ const authenticate = (roles = new Set(["ce", "cn", "ca"])) => (req, res, next) =
         if (!roles.has(verifiedToken.rol)) {
             return res.sendStatus(401);
         }
+
+        // add user to request to log their actions
+        req.userRequesting = verifiedToken.user;
 
         next();
     } catch {

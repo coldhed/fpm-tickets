@@ -4,8 +4,9 @@ import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken';
 import { json } from "express";
 
-async function createNewUser(req, res, userRequesting) {
+async function createNewUser(req, res) {
     let db = await connectDB();
+    let userRequesting = req.userRequesting;
 
     let newUser = req.body;
     newUser["last_login"] = Date();
@@ -112,10 +113,12 @@ async function doLogin(req, res) {
 }
 
 // endpoint to get all users
-async function getMany(req, res, userRequesting) {
+async function getMany(req, res) {
     const { _sort, _order, _start, _end, id } = req.query;
 
     let db = await connectDB();
+
+    let userRequesting = req.userRequesting;
 
     let users = [];
 
@@ -180,8 +183,10 @@ async function getMany(req, res, userRequesting) {
     res.json(users);
 }
 
-async function getOne(req, res, userRequesting) {
+async function getOne(req, res) {
     let db = await connectDB();
+
+    let userRequesting = req.userRequesting;
 
     let user = await db.collection("Usuarios").findOne({ "_id": new ObjectId(req.params.id) }, { projection: { contrasena: 0 } });
 
@@ -208,8 +213,9 @@ async function getOne(req, res, userRequesting) {
     res.json(user);
 }
 
-async function getCNs(req, res, userRequesting) {
+async function getCNs(req, res) {
     let db = await connectDB();
+    let userRequesting = req.userRequesting;
 
     let users = await db.collection("Usuarios").find({ "rol": "cn" }).project({ _id: 1, correo: 1 }).toArray();
 
@@ -225,8 +231,9 @@ async function getCNs(req, res, userRequesting) {
     res.json(users);
 }
 
-async function deleteUser(req, res, userRequesting) {
+async function deleteUser(req, res) {
     let db = await connectDB();
+    let userRequesting = req.userRequesting;
 
     let user = await db.collection("Usuarios").findOne({ "_id": new ObjectId(req.params.id) });
 
