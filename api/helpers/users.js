@@ -1,4 +1,4 @@
-import { connectDB, logDB } from "../db.js";
+import { connectDB, logDB } from "../util.js";
 import { ObjectId } from "mongodb";
 import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken';

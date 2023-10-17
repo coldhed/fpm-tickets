@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { connectDB } from '../db.js';
+import { connectDB } from '../util.js';
 import { createNewUser, doLogin, getMany, getCNs, deleteUser, getOne } from '../helpers/users.js';
 import jwt from 'jsonwebtoken';
 

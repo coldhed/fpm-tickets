@@ -30,4 +30,19 @@ async function logDB(action, user) {
     await db.collection('logs').insertOne(log);
 }
 
+async function Authenticate(req, res, next) {
+    try {
+        let token = req.get("Authentication");
+        let verifiedToken = jwt.verify(token, process.env.JWT_SECRET);
+
+        if (verifiedToken.rol != "ce") {
+            return res.sendStatus(401);
+        }
+
+        next();
+    } catch {
+        return res.sendStatus(401);
+    }
+}
+
 export { connectDB, logDB }
