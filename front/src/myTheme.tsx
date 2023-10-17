@@ -5,7 +5,7 @@ const myTheme = {
     palette: {
         ...defaultTheme.palette,
         primary: {
-            main: '#c22032',
+            main: '#04953f',
         },
         secondary: {
             main: '#c22032',

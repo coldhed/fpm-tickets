@@ -7,3 +7,7 @@
   background-color: rgb(194, 32, 50);
   color: rgb(255, 255, 255);
 }
+
+.custom-border-color {
+  border-color: rgb(4, 149, 63);
+}

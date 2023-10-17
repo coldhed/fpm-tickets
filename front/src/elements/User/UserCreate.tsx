@@ -72,6 +72,7 @@ export const UserCreate = (props: any) => {
                             { id: 'ce', name: 'Coordinador Ejecutivo' },
                         ]} />
                     </div>
+
                     <div className="full-width-input flex flex-col items-start justify-center rounded-2xl  bg-clip-border px-3 py-4 shadow-3xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
                     </div>
 
@@ -96,7 +97,6 @@ export const UserCreate = (props: any) => {
                     </Grid>
                 </SimpleForm>
             </div>
-
         </Create >
     );
 }

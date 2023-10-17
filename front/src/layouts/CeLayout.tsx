@@ -44,13 +44,10 @@ export const CeLayout = () => {
                 create={AulaCreate} 
                 edit={AulaEdit}
             />
-
-
+        
             <CustomRoutes>
                 <Route path="/dashboard" element={<Dashboard />} />
             </CustomRoutes>
-
-
         </>
     );
 };

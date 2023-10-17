@@ -1,19 +1,15 @@
-import { useMediaQuery, Theme } from "@mui/material";
-import {TextInput, SearchInput, Toolbar, List, Datagrid, TextField,EditButton, DateField } from "react-admin";
-import LibaryBooks from "@mui/icons-material/LibraryBooks";
-import { Chip } from '@mui/material'
+import { List, Datagrid, TextField, EditButton, DateField, ListProps, useListContext, useRecordContext } from "react-admin";
 import Visibility from "@mui/icons-material/Visibility";
-
-
-import { SavedQueriesList, FilterLiveSearch, FilterList, FilterListItem } from 'react-admin';
+import { FilterLiveSearch, FilterList, FilterListItem } from 'react-admin';
 import { Card, CardContent } from '@mui/material';
 import InventoryRoundedIcon from '@mui/icons-material/InventoryRounded';
 import PriorityHighRoundedIcon from '@mui/icons-material/PriorityHighRounded';
+import '../CSS/TicketCreate.css';
 
 export const PostFilterSidebar = () => (
     <Card sx={{ order: -1, mr: 2, mt: 9, width: 200 }}>
         <CardContent>
-        <FilterLiveSearch source="titulo" label="TÍTULO" />
+            <FilterLiveSearch source="titulo" label="TÍTULO" />
             <FilterList label="PRIORIDAD" icon={<PriorityHighRoundedIcon />}>
                 <FilterListItem label="Alta" value={{ prioridad: "Alta" }} />
                 <FilterListItem label="Media" value={{ prioridad: "Media" }} />
@@ -29,78 +25,81 @@ export const PostFilterSidebar = () => (
 );
 
 const CustomEditButton = () => (
-    <EditButton
-        label="Visualizar Ticket" 
-        icon={<Visibility/>}
+    <button className="middle none center mr-3 rounded-lg border custom-border-color py-3 px-6 font-sans text-xs font-bold uppercase text-pink-500 transition-all hover:opacity-75 focus:ring focus:ring-pink-200 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">        <EditButton
+        label="Visualizar Ticket"
+        icon={<Visibility />}
     />
+    </button>
+
 );
 
 const InicioTextComponent = () => (
     <div className="text-xs font-bold">
-      <p>Inicio: </p>
+        <p>Inicio: </p>
     </div>
 );
 
 const PrioridadTextComponent = () => (
     <div className="text-xs font-bold">
-      <p>Prioridad: </p>
+        <p>Prioridad: </p>
     </div>
 );
 const EstatusTextComponent = () => (
     <div className="text-xs font-bold">
-      <p> Estatus: </p>
+        <p> Estatus: </p>
     </div>
 );
 
+type Ticket = {
+    id: string;
+    prioridad: string;
+};
 
-const FiltrosList = [
-    <SearchInput source="titulo" alwaysOn />,
-];
+const PriorityColor = () => {
+    const record = useRecordContext<Ticket>();
+    return (
+        <span
+            className={priorityClassColor(record.prioridad)}
+        >
+            {record.prioridad}
+        </span>
+    )
+}
 
-const CustomListToolbar = () => (
-    <Toolbar>
-        <CustomEditButton />
-    </Toolbar>
-);
+export const TicketList = (props: ListProps) => {
+    const { data } = useListContext<Ticket>();
+    console.log(data)
 
-
-
-export const TicketList = () => (
-    <List aside={<PostFilterSidebar />} >
-        <Datagrid className="mx-[20rem] " >
-            <div className="flex flex-col gap-2">
-                <div className="m-auto h-52 w-full max-w-md bg-white shadow p-2 border-t-4 border-green-600 rounded">
-                    <header className="p-2 border-b flex items-center justify-center"> 
-                        <div className="flex flex-col font-bold">
-                            <TextField class="text-lg " source="titulo" label="Título"/>
+    return (
+        <List aside={<PostFilterSidebar />}>
+            <div>
+                <Datagrid>
+                    <TextField source="titulo" label="Título" />
+                    <div className="relative inline-block px-3 py-1 font-semibold leading-tight">
+                        <div className="inset-0 opacity-60">
+                            <PriorityColor />
                         </div>
-                    </header>
-                    <div className="flex flex-wrap p-2 w-full gap-4 text-xl">
-                        <div className="flex flex-col w-full ">
-                            <InicioTextComponent />
-                            <DateField className="text-xl" source="inicio" label="Fecha de creación"/>
-                        </div>
-
-                        <div className="flex flex-col">
-                            <PrioridadTextComponent />
-                            <TextField source="prioridad" label="Prioridad"/>
-                        </div>
-
-                        <div className="flex flex-col">
-                            <EstatusTextComponent />
-                            <TextField source="estatus" label="Estatus"/>
-                        </div>
-                        
                     </div>
-                    <div className="flex flex-col">
-                            <CustomEditButton />
-                    </div>
-
-                </div>
+                    <TextField source="estatus" label="Estatus" />
+                    <DateField source="inicio" label="Fecha de creación" />
+                    <CustomEditButton />
+                </Datagrid>
             </div>
-        </Datagrid>
-    </List>
-);
+        </List>
+    )
+};
 
 
+function priorityClassColor(prioridad: string) {
+    switch (prioridad) {
+        case 'Alta':
+            return 'bg-red-200 text-red-900 py-1 px-2 rounded-full';
+        case 'Media':
+            return 'bg-yellow-200 text-yellow-900 py-1 px-2 rounded-full';
+        case 'Baja':
+            return 'bg-green-200 text-green-900 py-1 px-2 rounded-full';
+        default:
+            return "";
+    }
+}
 
