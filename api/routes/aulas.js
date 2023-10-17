@@ -1,11 +1,10 @@
 import { Router } from 'express';
 import { connectDB } from '../util.js';
+import { ObjectId } from 'mongodb';
 import { createNewAula } from '../helpers/aulas.js';
 import jwt from 'jsonwebtoken';
 
 const router = Router();
-
-
 
 router.get("/", async (req, res) => {
     let db = await connectDB();
@@ -60,15 +59,62 @@ router.get("/nombre", async (req, res) => {
         delete user["nombre"];
     })
     res.json(users);
-    console.log(users)
 })
+
+router.get("/ciudad", async (req, res) => {
+    try {
+        let db = await connectDB();
+        let users = await db.collection("Aula").find({}).project({_id: 1, ciudad: 1}).toArray();
+    
+        users = users.map((user) => {
+            user["id"] = user["_id"];
+            delete user["_id"];
+            return user;
+        });
+        
+        res.json(users);
+    } catch (error) {
+        console.error("Error retrieving data:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
 
 //getOne
 router.get("/:id", async (req, res) => {
     let db = await connectDB();
 
-    let data = await db.collection('Aula').find({ "id": Number(req.params.id) }).project({ _id: 0 }).toArray();
-    res.json(data[0]);
+    console.log(req.params.id)
+
+    let data = await db.collection('Aula').findOne({ "_id": new ObjectId(req.params.id) });
+
+    console.log(data)
+
+    data["id"] = data["_id"];
+    delete data["_id"];
+
+    res.json(data);
+})
+
+//AulaCreate
+router.post("/", async (request, res) => {
+    // console.log(request.body)
+
+    let db = await connectDB();
+    let addValue = request.body
+    let data = await db.collection('Aula').insertOne(addValue);
+    res.json(data);
+})
+
+// delete
+router.delete("/:id", async (req, res) => {
+    let db = await connectDB();
+
+    let data = await db.collection('Aula').deleteOne({ "_id": new ObjectId(req.params.id) });
+    data["id"] = data["_id"];
+    delete data["_id"];
+
+    res.json(data);
 })
 
 export default router;

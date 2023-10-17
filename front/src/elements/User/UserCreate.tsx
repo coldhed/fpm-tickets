@@ -8,11 +8,12 @@ const CreateToolbar = (props: any) => (
 )
 
 export const UserCreate = (props: any) => {
+    const headerStyle = "text-xl font-bold  pt-1 text-[#c22032]"
     const [coor_nac, setCoor_nac] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
     async function fetchCoor_nac() {
-        const request = new Request("http://127.0.0.1:4000/Usuarios/cn", {
+        const request = new Request("https://127.0.0.1:4000/Usuarios/cn", {
             method: "GET",
             headers: new Headers({ Authentication: localStorage.getItem("auth") as string }),
         });
@@ -36,30 +37,51 @@ export const UserCreate = (props: any) => {
     }, [isLoading])
 
     return (
-        <Create {...props}>
+        <Create {...props} className="mt-4 mr-[8rem] ml-12">
             <SimpleForm toolbar={<CreateToolbar />}>
-                <TextInput source="nombre_completo" label="Nombre Completo" />
-                <TextInput source="correo" label="Correo" />
-                <TextInput source="contrasena" label="Contraseña" />
-                <SelectInput source="rol" label="Rol" defaultValue="ca" validate={required()} choices={[
-                    { id: 'ca', name: 'Coordinador de Aula' },
-                    { id: 'cn', name: 'Coordinador Nacional' },
-                    { id: 'ce', name: 'Coordinador Ejecutivo' },
-                ]} />
-                <FormDataConsumer>
-                    {({ formData, ...rest }) => {
-                        return (
-                            <SelectInput
-                                source="coor_nac"
-                                label="Coordinador Nacional"
-                                disabled={formData.rol !== 'ca'}
-                                isLoading={isLoading}
-                                choices={formData.rol === 'ca' ? coor_nac : []}
-                            />
-                        );
-                    }}
-                </FormDataConsumer>
+                <div className="px-8 py-4 grid grid-cols-2 gap-y-7 gap-x-14 ">
+                    <div>
+                        <p className={headerStyle}>Nombre Completo</p>
+                        <TextInput source="nombre_completo" label="" />
+                    </div>
+
+                    <div>
+                        <p className={headerStyle}>Correo</p>
+                        <TextInput source="correo" label="" />
+                    </div>
+
+                    <div>
+                        <p className={headerStyle}>Contraseña</p>
+                        <TextInput source="contrasena" label="" />
+                    </div>
+
+                    <div>
+                        <p className={headerStyle}>Rol</p>
+                        <SelectInput source="rol" label="" defaultValue="ca" validate={required()} choices={[
+                            { id: 'ca', name: 'Coordinador de Aula' },
+                            { id: 'cn', name: 'Coordinador Nacional' },
+                            { id: 'ce', name: 'Coordinador Ejecutivo' },
+                        ]} />
+                    </div>
+
+                    <div>
+                        <p className={headerStyle}>Coordinador Nacional</p>
+                        <FormDataConsumer>
+                            {({ formData, ...rest }) => {
+                                return (
+                                    <SelectInput
+                                        source="coor_nac"
+                                        label=""
+                                        disabled={formData.rol !== 'ca'}
+                                        isLoading={isLoading}
+                                        choices={formData.rol === 'ca' ? coor_nac : []}
+                                    />
+                                );
+                            }}
+                        </FormDataConsumer>
+                    </div>
+                </div>
             </SimpleForm>
-        </Create>
+        </Create >
     );
 }

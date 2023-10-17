@@ -5,9 +5,25 @@ import jwt from 'jsonwebtoken';
 
 const router = Router();
 
+
 // get coor_nac
 router.get("/cn", authenticate(new Set(["ce"])), async (req, res) => {
     await getCNs(req, res);
+})
+
+router.get("/correo", async (req, res) => {
+    let db = await connectDB();
+    let users = await db.collection("Usuarios").find({}).project({_id: 1, correo: 1}).toArray();
+    
+    users.map((user) => {
+        user["id"] = user["_id"];
+        delete user["_id"];
+        
+        user["name"] = user["correo"];
+        delete user["correo"];
+
+    })
+    res.json(users);
 })
 
 // get many

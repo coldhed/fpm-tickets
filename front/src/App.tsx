@@ -1,5 +1,6 @@
 import {
     Admin,
+    Layout,
     Resource,
     ListGuesser,
     EditGuesser,
@@ -13,6 +14,8 @@ import { Route } from 'react-router-dom';
 import { dataProvider } from "./dataProvider";
 import authProvider from "./authProvider"
 import { i18nProvider } from "./i18nProvider/i18nProvider";
+import MyLoginPage from "./MyLoginPage";
+import { MyAppBar } from "./MyAppBar";
 
 import myTheme from "./myTheme";
 
@@ -20,11 +23,18 @@ import myTheme from "./myTheme";
 import { CeLayout } from "./layouts/CeLayout";
 import { CaLayout } from "./layouts/CaLayout";
 
-
+const MyLayout = (props: any) => <Layout {...props} appBar={MyAppBar} />;
 
 export const App = () => (
 
-    <Admin dataProvider={dataProvider} authProvider={authProvider} theme={myTheme} i18nProvider={i18nProvider} >
+    <Admin
+        dataProvider={dataProvider}
+        authProvider={authProvider}
+        theme={myTheme}
+        i18nProvider={i18nProvider}
+        loginPage={<MyLoginPage theme={myTheme} />}
+        layout={MyLayout}
+    >
         {permissions => {
             // if there are no permissions, you return the CaLayout 
             // and since you are not logged-in it will take you to the login page

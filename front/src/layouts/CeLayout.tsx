@@ -13,6 +13,9 @@ import { UserShow } from "../elements/User/UserShow";
 import { TicketList } from "../elements/TicketsList";
 import { TicketCreate } from "../elements/TicketCreate";
 import { TicketEdit } from "../elements/TicketUpdate";
+import { AulaCreate } from "../elements/Aula/AulaCreate";
+import { AulaList } from "../elements/Aula/AulaList";
+import { AulaEdit } from "../elements/Aula/AulaUpdate";
 
 export const CeLayout = () => {
     return (
@@ -23,7 +26,21 @@ export const CeLayout = () => {
                 create={TicketCreate}
                 edit={TicketEdit}
             />
-            <Resource name="Usuarios" list={UserList} create={UserCreate} show={UserShow} />
+
+            <Resource 
+                name="Usuarios"
+                list={UserList}
+                create={UserCreate}
+                show={UserShow} 
+            />
+
+            <Resource 
+                name="Aula" 
+                list={AulaList} 
+                create={AulaCreate} 
+                edit={AulaEdit}
+            />
+
         </>
     );
 };
