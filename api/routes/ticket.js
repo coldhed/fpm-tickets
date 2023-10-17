@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { connectDB } from '../db.js';
+import { connectDB } from '../util.js';
 import { ObjectId } from 'mongodb';
 
 
@@ -45,7 +45,7 @@ router.get("/", async (req, res) => {
 
 
         for (let index = 0; index < request.query.id.length; index++) { //recorremos el array de ids
-            let dataObtain = await db.collection('Tickets').find({ _id: new ObjectId(request.query.id[index]) }).project({ }).toArray(); // sacamos el valor del index y luego la proyección
+            let dataObtain = await db.collection('Tickets').find({ _id: new ObjectId(request.query.id[index]) }).project({}).toArray(); // sacamos el valor del index y luego la proyección
             data = await data.concat(dataObtain)
         }
         
@@ -98,7 +98,7 @@ router.post("/", async (request, res) => {
     // let data = await db.collection('Tickets').find({}).toArray();
     // let id = data.length + 1;
     // addValue["id"] = id;
-   let data = await db.collection('Tickets').insertOne(addValue);
+    let data = await db.collection('Tickets').insertOne(addValue);
     res.json(data);
 })
 
@@ -117,6 +117,7 @@ router.put("/:id", async (request, res) => {
 
     if (addValue.hasOwnProperty("resolucion")) {
         addValue["estatus"] = "Cerrado";
+        addValue["fin"] = Date();
     }
 
     let data = await db.collection("Tickets").updateOne({ "_id": addValue["_id"] }, { "$set": addValue });

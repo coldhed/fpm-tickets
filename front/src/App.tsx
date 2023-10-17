@@ -1,5 +1,6 @@
 import {
     Admin,
+    Layout,
     Resource,
     ListGuesser,
     EditGuesser,
@@ -14,6 +15,7 @@ import { dataProvider } from "./dataProvider";
 import authProvider from "./authProvider"
 import { i18nProvider } from "./i18nProvider/i18nProvider";
 import MyLoginPage from "./MyLoginPage";
+import { MyAppBar } from "./MyAppBar";
 
 import myTheme from "./myTheme";
 
@@ -21,8 +23,8 @@ import myTheme from "./myTheme";
 import { CeLayout } from "./layouts/CeLayout";
 import { CaLayout } from "./layouts/CaLayout";
 
-import { MyLayout } from './MyLayout';
 
+import { MyLayout } from './MyLayout';
 
 
 export const App = () => (

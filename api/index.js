@@ -10,8 +10,8 @@ import fs from "fs";
 dotenv.config();
 
 import { ENV, PORT } from "./const.js"
-import { connectDB } from './db.js';
 import { usersRouter, ticketRouter, aulasRouter, dashboardRouter} from "./routes/routes.js"
+import { connectDB } from './util.js';
 
 
 

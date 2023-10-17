@@ -19,6 +19,7 @@ import { AulaCreate } from "../elements/Aula/AulaCreate";
 import { AulaList } from "../elements/Aula/AulaList";
 import { AulaShow } from "../elements/Aula/AulaShow";
 import Dashboard from "../Dashboard";
+import { AulaEdit } from "../elements/Aula/AulaUpdate";
 
 export const CeLayout = () => {
     return (
@@ -29,11 +30,21 @@ export const CeLayout = () => {
                 create={TicketCreate}
                 edit={TicketEdit}
             />
-            <Resource name="Usuarios" list={UserList} create={UserCreate} show={UserShow} />
 
-            <Resource name="Aula" list={AulaList}/>
+            <Resource 
+                name="Usuarios"
+                list={UserList}
+                create={UserCreate}
+                show={UserShow} 
+            />
 
-            {/* <Resource name="Aulas" list={AulaList} create={AulaCreate} show={AulaShow} /> */}
+            <Resource 
+                name="Aula" 
+                list={AulaList} 
+                create={AulaCreate} 
+                edit={AulaEdit}
+            />
+
 
             <CustomRoutes>
                 <Route path="/dashboard" element={<Dashboard />} />

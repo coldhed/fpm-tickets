@@ -1,5 +1,5 @@
+import {CreateButton, Toolbar, SaveButton, DateField, SelectInput, TextInput, SimpleForm, Create, required, FormDataConsumer } from "react-admin";
 import { useEffect, useState } from "react";
-import { Create, CreateButton, FormDataConsumer, SaveButton, SelectInput, SimpleForm, TextInput, Toolbar, required } from "react-admin";
 
 const CreateToolbar = (props: any) => (
     <Toolbar {...props}>
@@ -8,68 +8,67 @@ const CreateToolbar = (props: any) => (
 )
 
 export const AulaCreate = (props: any) => {
-    const [coor_nac, setCoor_nac] = useState([]);
+    const [nomCoor, setCoor] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
-    async function fetchCoor_nac() {
-        const request = new Request("http://127.0.0.1:4000/Usuarios/cn", {
+    async function fetchnomCoor() {
+        const request = new Request("https://127.0.0.1:4000/Usuarios/correo", {
             method: "GET",
-            headers: new Headers({ Authentication: localStorage.getItem("auth") as string }),
+            headers: new Headers({ Authentication: localStorage.getItem("auth") as string}),
         });
 
         try {
             let response = await fetch(request);
-
+            console.log(await response.json)
             let data = await response.json();
-
-            setCoor_nac(data);
+      
+            setCoor(data);
             setIsLoading(false);
-        } catch (error) {
+          }
+          catch(error){
             console.log(error);
-        }
+          }
     }
 
     useEffect(() => {
         if (isLoading) {
-            fetchCoor_nac();
+          fetchnomCoor();
         }
-    }, [isLoading])
-
-
-    //         "nombre": nombre,
-    //         "coor_aula": coor_aula,
-    //         "direccion": direccion,
-    //         "ciudad": ciudad,
-    //         "esatdo": estado,
-    //         "CP": codigo_postal,
-    //         "calle": calle,
+      }, [isLoading])
 
     return (
+        
         <Create {...props}>
-            <SimpleForm toolbar={<CreateToolbar />}>
-                <TextInput source="nombre" label="Nombre" />
-                <TextInput source="coor_aula" label="Coordinador de Aula" />
-                {/* Fetch coor_aula */}
-                {/* <FormDataConsumer>
+            <SimpleForm title="Crear Aula" toolbar={<CreateToolbar />}>
+                <TextInput source="nombre" label="Nombre Aula" validate={[required('Campo Obligatorio')]}/>
+                <FormDataConsumer>
                     {({ formData, ...rest }) => {
                         return (
                             <SelectInput
-                                source="coor_aula"
-                                label="Coordinador Nacional"
-                                disabled={formData.rol !== 'ca'}
+                                source="Usuarios"
+                                label="Coordinador"
                                 isLoading={isLoading}
-                                choices={formData.rol === 'ca' ? coor_nac : []}
+                                choices={nomCoor}
+                                validate={[required('Campo Obligatorio')]}
                             />
-                        );
+                        ); 
                     }}
-                </FormDataConsumer> */}
-                <TextInput source="direccion" label="Direccion" />
-                <TextInput source="ciudad" label="Ciudad" />
-                <TextInput source="esatdo" label="Estado" />
-                <TextInput source="codigo_postal" label="Codigo Postal" />
-                <TextInput source="calle" label="Calle" />
+                </FormDataConsumer>
+                <TextInput source="ciudad" label="Ciudad" validate={[required('Campo Obligatorio')]} />
+                <TextInput source="esatdo" label="Estado" validate={[required('Campo Obligatorio')]}/>
+                <TextInput source="CP" label="Codigo Postal" validate={[required('Campo Obligatorio')]}/>
+                <TextInput source="calle" label="Calle" validate={[required('Campo Obligatorio')]}/>
                 
             </SimpleForm>
         </Create>
     );
 }
+
+// "_id": "6528672852adaf594cea4f33",
+//     "nombre": "Aula 1 - Colegio Occidente",
+//     "coor_aula": "mariel@fpm.mx",
+//     "ciudad": "Ciudad Obregón",
+//     "esatdo": "Sonora",
+//     "CP": "189",
+//     "calle": "Calle 300",
+//     "id": "6528672852adaf594cea4f33"
