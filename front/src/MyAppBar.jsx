@@ -3,7 +3,7 @@ import { AppBar, TitlePortal, ToggleThemeButton } from 'react-admin';
 import Box from '@mui/material/Box';
 
 export const MyAppBar = () => (
-    <AppBar color="primary" toolbar={<ToggleThemeButton />} >
+    <AppBar color="primary" >
         <TitlePortal />
         <Box flex="1" />
         <img

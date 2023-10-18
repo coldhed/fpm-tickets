@@ -10,7 +10,7 @@ export const i18nProvider = polyglotI18nProvider(
     locale => translations[locale],
     'es', // default locale
     [
-        { locale: 'en', name: 'English' },
+        // { locale: 'en', name: 'English' },
         { locale: 'es', name: 'Español' }
     ],
 );
