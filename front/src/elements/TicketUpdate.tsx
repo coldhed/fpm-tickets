@@ -21,7 +21,7 @@ const AulaTextComponent = () => (
     <div className="customTextComp">
       <p>Aula: </p>
     </div>
-
+);
 
 const TituloTextComponent = () => (
     <div className="customTextComp">
