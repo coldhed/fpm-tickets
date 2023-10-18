@@ -12,7 +12,7 @@ async function createNewAula(nombre, coor_aula, direccion, ciudad, estado, codig
             "coor_aula": coor_aula,
             "direccion": direccion,
             "ciudad": ciudad,
-            "esatdo": estado,
+            "estado": estado,
             "CP": codigo_postal,
             "calle": calle,
         };
