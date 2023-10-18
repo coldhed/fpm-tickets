@@ -2,7 +2,6 @@ import { Router } from 'express';
 import { authenticate, logDB } from '../util.js';
 import { createNewUser, doLogin, getMany, getCNs, deleteUser, getOne } from '../helpers/users.js';
 import { check, param } from "express-validator";
-import jwt from 'jsonwebtoken';
 
 const router = Router();
 
@@ -35,7 +34,7 @@ router.get("/", authenticate(new Set(["ce"])), async (req, res) => {
 });
 
 // get one
-let getByIdCheck = [param("id").exists().isMongoId()]
+let getByIdCheck = [param("id").exists().isMongoId().trim().escape()]
 router.get("/:id", getByIdCheck, authenticate(new Set(["ce"])), async (req, res) => {
     await getOne(req, res);
 });
@@ -53,7 +52,7 @@ router.post("/", createCheck, authenticate(new Set(["ce"])), async (req, res) =>
 })
 
 // delete a user
-let deleteCheck = [param("id").exists().isMongoId()]
+let deleteCheck = [param("id").exists().isMongoId().trim().escape()]
 router.delete("/:id", deleteCheck, authenticate(new Set(["ce"])), async (req, res) => {
     await deleteUser(req, res);
 })
