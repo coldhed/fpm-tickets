@@ -1,12 +1,13 @@
 import { Router } from 'express';
-import { connectDB } from '../util.js';
+import { connectDB, authenticate, logDB } from '../util.js';
 import { ObjectId } from 'mongodb';
+import { check, param, validationResult } from "express-validator";
 import { createNewAula } from '../helpers/aulas.js';
 import jwt from 'jsonwebtoken';
 
 const router = Router();
 
-router.get("/", async (req, res) => {
+router.get("/", authenticate(new Set(["ce", "cn"])), async (req, res) => {
     let db = await connectDB();
     let data = [];
 
@@ -44,10 +45,12 @@ router.get("/", async (req, res) => {
         data[i]["id"] = data[i]["_id"];
     }
 
+    logDB("get all aulas", req.userRequesting);
+
     res.json(data);
 })
 
-router.get("/nombre", async (req, res) => {
+router.get("/nombre", authenticate(), async (req, res) => {
     let db = await connectDB();
     let users = await db.collection("Aula").find({}).project({ _id: 1, nombre: 1 }).toArray();
 
@@ -58,20 +61,25 @@ router.get("/nombre", async (req, res) => {
         user["name"] = user["nombre"];
         delete user["nombre"];
     })
+
+    logDB("get all aula nombres", req.userRequesting);
+
     res.json(users);
 })
 
-router.get("/ciudad", async (req, res) => {
+router.get("/ciudad", authenticate(), async (req, res) => {
     try {
         let db = await connectDB();
-        let users = await db.collection("Aula").find({}).project({_id: 1, ciudad: 1}).toArray();
-    
+        let users = await db.collection("Aula").find({}).project({ _id: 1, ciudad: 1 }).toArray();
+
         users = users.map((user) => {
             user["id"] = user["_id"];
             delete user["_id"];
             return user;
         });
-        
+
+        logDB("get all aula ciudades", req.userRequesting);
+
         res.json(users);
     } catch (error) {
         console.error("Error retrieving data:", error);
@@ -81,7 +89,15 @@ router.get("/ciudad", async (req, res) => {
 
 
 //getOne
-router.get("/:id", async (req, res) => {
+let getOneCheck = [param("id").exists().isMongoId().trim().escape()];
+router.get("/:id", getOneCheck, authenticate(new Set(["ce", "cn"])), async (req, res) => {
+    const result = validationResult(req);
+
+    if (result.errors.length > 0) {
+        res.status(400)
+        return res.send({ errors: result.array() });
+    }
+
     let db = await connectDB();
 
     console.log(req.params.id)
@@ -93,26 +109,55 @@ router.get("/:id", async (req, res) => {
     data["id"] = data["_id"];
     delete data["_id"];
 
+    logDB(`get one aula: ${req.params.id}`, req.userRequesting);
+
     res.json(data);
 })
 
 //AulaCreate
-router.post("/", async (request, res) => {
-    // console.log(request.body)
+let createCheck = [
+    check("nombre").isString().notEmpty().trim().escape(),
+    check("coor_aula").isEmail().normalizeEmail().trim().escape(),
+    check("ciudad").isString().trim().escape(),
+    check("estado").isString().trim().escape(),
+    check("CP").isString().trim().escape(),
+    check("calle").isString().trim().escape(),
+];
+router.post("/", createCheck, authenticate(new Set(["ce", "cn"])), async (req, res) => {
+    // console.log(req.body)
+    const result = validationResult(req);
+
+    if (result.errors.length > 0) {
+        res.status(400)
+        return res.send({ errors: result.array() });
+    }
 
     let db = await connectDB();
-    let addValue = request.body
+    let addValue = req.body
     let data = await db.collection('Aula').insertOne(addValue);
+
+    logDB(`create aula: ${data.insertedID}`, req.userRequesting);
+
     res.json(data);
 })
 
 // delete
-router.delete("/:id", async (req, res) => {
+let deleteCheck = [param("id").exists().isMongoId().trim().escape()];
+router.delete("/:id", deleteCheck, authenticate(new Set(["ce", "cn"])), async (req, res) => {
+    const result = validationResult(req);
+
+    if (result.errors.length > 0) {
+        res.status(400)
+        return res.send({ errors: result.array() });
+    }
+
     let db = await connectDB();
 
     let data = await db.collection('Aula').deleteOne({ "_id": new ObjectId(req.params.id) });
     data["id"] = data["_id"];
     delete data["_id"];
+
+    logDB(`delete aula: ${data.id}`, req.userRequesting);
 
     res.json(data);
 })
