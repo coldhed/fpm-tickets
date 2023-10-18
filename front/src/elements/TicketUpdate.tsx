@@ -1,6 +1,5 @@
-import {ArrayInputProps, SimpleFormIterator, ArrayInput, Datagrid, ArrayField, List, Create, SimpleForm, Toolbar, SelectInput, SaveButton, Edit, TextField, TabbedForm, FormTab, required, TextInput, DateField } from 'react-admin';
+import { ToolbarProps, SaveButton, SimpleFormIterator, ArrayInput, Datagrid, ArrayField, SimpleForm, SelectInput, Edit, TextField, TabbedForm, FormTab, TextInput, DateField, Toolbar } from 'react-admin';
 import {useRecordContext} from "react-admin";
-import {useOnSuccess,} from '../hooks/costumhandlers';
 import "../CSS/TicketUpdate.css";
 import '../CSS/TicketCreate.css';
 
@@ -22,6 +21,8 @@ const AulaTextComponent = () => (
       <p>Aula: </p>
     </div>
 );
+
+
 
 const TituloTextComponent = () => (
     <div className="customTextComp">
@@ -49,6 +50,7 @@ const EstatusTextComponent = () => (
       <p> Estatus: </p>
     </div>
 );
+
 const EstatusCambioTextComponent = () => (
     <div className="customTextComp">
       <p> Cambiar Estatus: </p>
@@ -56,19 +58,9 @@ const EstatusCambioTextComponent = () => (
 );
 
 
-const CustomArrayInput = (props : any) => {
 
-    const customProps = { ...props };
-    delete customProps.record;
-    delete customProps.onAddClick;
-
-    return (
-        <ArrayInput {...customProps}>
-        <SimpleFormIterator>
-            <TextInput source="comentarios" label="Nuevo Comentario" />
-        </SimpleFormIterator>
-        </ArrayInput>
-    );
+const CostumToolBar = (props: any) => {
+    return null;
 };
 
 
@@ -139,9 +131,9 @@ export const TicketEdit = () => {
 
             <div className="grid grid-cols-2 gap-4 px-2 w-full">
                 <div className="flex flex-col items-start justify-center rounded-2xl bg-white bg-clip-border px-3 py-4 shadow-3xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
-                    <SimpleForm>
+                    <SimpleForm toolbar={<CostumToolBar/>}>
                         <ArrayField source="comentarios">
-                            <Datagrid>
+                            <Datagrid bulkActionButtons={false}>
                                 <TextField source="comentarios" label="Comentarios" />
                                 <DateField source="fecha" label="Fecha" />
                             </Datagrid>

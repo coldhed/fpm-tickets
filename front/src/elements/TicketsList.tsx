@@ -1,4 +1,5 @@
 import { List, Datagrid, TextField, EditButton, DateField, ListProps, useListContext, useRecordContext } from "react-admin";
+import React, { useState } from 'react';
 import Visibility from "@mui/icons-material/Visibility";
 import { FilterLiveSearch, FilterList, FilterListItem } from 'react-admin';
 import { Card, CardContent } from '@mui/material';
@@ -66,13 +67,76 @@ const PriorityColor = () => {
     )
 }
 
+const PriorityColor2 = () => {
+    const record = useRecordContext<Ticket>();
+    return (
+        <span
+            className={priorityClassColor2(record.prioridad)}
+        >
+            {record.prioridad}
+        </span>
+    )
+}
+
 export const TicketList = (props: ListProps) => {
+    // const [view, setView] = useState(false);
+    const [showFirstDatagrid, setShowFirstDatagrid] = useState(true);
+
+    const handleCheckboxChange = () => {
+        setShowFirstDatagrid(!showFirstDatagrid);
+    };
+
     const { data } = useListContext<Ticket>();
-    console.log(data)
 
     return (
         <List aside={<PostFilterSidebar />}>
+            {/* Button toggle between view == true && view == false (con un handler fn) */}
+            {/* OPerador ternario */}
             <div>
+                <label>
+                    <input
+                        type="checkbox"
+                        checked={showFirstDatagrid}
+                        onChange={handleCheckboxChange}
+                    />{' '}
+                    Visualizar en Tarjetas
+                </label>
+            </div>
+
+            {showFirstDatagrid ? (
+                <Datagrid bulkActionButtons={false} >
+                    <div className="flex flex-col gap-2">
+                        <div className="m-auto h-73 w-full max-w-md bg-white shadow p-2 border-t-4 border-green-600 rounded">
+                            <header className="p-2 border-b flex items-center justify-center"> 
+                                <div className="flex flex-col font-bold">
+                                    <TextField class="text-lg " source="titulo" label="Título"/>
+                                </div>
+                            </header>
+                            <div className="flex flex-wrap p-2 w-full gap-4 text-xl">
+                                <div className="flex flex-col w-full ">
+                                    <InicioTextComponent />
+                                    <DateField className="text-xl" source="inicio" label="Fecha de creación"/>
+                                </div>
+
+                                <div className="flex flex-col">
+                                    <PrioridadTextComponent />
+                                    <PriorityColor2 />
+                                </div>
+
+                                <div className="flex flex-col">
+                                    <EstatusTextComponent />
+                                    <TextField source="estatus" label="Estatus"/>
+                                </div>
+
+                            </div>
+                            <div className="flex flex-col">
+                                    <CustomEditButton />
+                            </div>
+
+                        </div>
+                    </div>
+                </Datagrid>
+            ) : (
                 <Datagrid>
                     <TextField source="titulo" label="Título" />
                     <div className="relative inline-block px-3 py-1 font-semibold leading-tight">
@@ -84,6 +148,15 @@ export const TicketList = (props: ListProps) => {
                     <DateField source="inicio" label="Fecha de creación" />
                     <CustomEditButton />
                 </Datagrid>
+                
+            )}
+
+            <div>
+                
+            </div>
+
+            <div>
+                
             </div>
         </List>
     )
@@ -103,3 +176,15 @@ function priorityClassColor(prioridad: string) {
     }
 }
 
+function priorityClassColor2(prioridad: string) {
+    switch (prioridad) {
+        case 'Alta':
+            return 'bg-red-200 text-red-900 py-0.001 px-2 rounded-full flex items-center justify-center text-sm';
+        case 'Media':
+            return 'bg-yellow-200 text-yellow-900 py-0.001 px-2 rounded-full flex items-center justify-center text-sm';
+        case 'Baja':
+            return 'bg-green-200 text-green-900 py-0.001 px-2 rounded-full flex items-center justify-center text-sm';
+        default:
+            return "";
+    }
+}
