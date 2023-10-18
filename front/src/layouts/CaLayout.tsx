@@ -6,9 +6,9 @@ import {
     ShowGuesser,
 } from "react-admin";
 
-import { TicketList } from "../elements/TicketsList";
-import { TicketCreate } from "../elements/TicketCreate";
-import { TicketEdit } from "../elements/TicketUpdate";
+import { TicketList } from "../elements/Ticket/TicketsList";
+import { TicketCreate } from "../elements/Ticket/TicketCreate";
+import { TicketEdit } from "../elements/Ticket/TicketUpdate";
 
 export const CaLayout = () => {
     return (

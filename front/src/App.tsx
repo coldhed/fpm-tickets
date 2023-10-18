@@ -22,7 +22,7 @@ import myTheme from "./myTheme";
 
 import { CeLayout } from "./layouts/CeLayout";
 import { CaLayout } from "./layouts/CaLayout";
-
+import { CnLayout } from "./layouts/CnLayout";
 
 import { MyLayout } from './MyLayout';
 
@@ -44,6 +44,8 @@ export const App = () => (
             if (permissions === "no role") return CaLayout();
 
             if (permissions === "ce") return CeLayout();
+
+            if (permissions === "cn") return CnLayout();
 
             return CaLayout();
         }}
