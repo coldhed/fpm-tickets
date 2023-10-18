@@ -18,35 +18,17 @@ const CustomEditButton = () => (
     />
 );
 
-const CustomListToolbar = () => (
-    <Toolbar>
-        <CustomEditButton />
-    </Toolbar>
-);
-
 export const AulaList = () => {
     return (
-        <List actions={<ListActions />}>
-            <Datagrid>
+        <List actions={<ListActions />} className="mr-[8rem] mt-5">
+            <Datagrid rowClick="show" size="medium">
                 <TextField source="nombre" label="Nombre" />
                 <TextField source="ciudad" label="Ciudad" />
-                <TextField source="estado" label="Estado" />
+                <TextField source="esatdo" label="Estado" />
                 <CustomEditButton />
             </Datagrid>
         </List>
     );
 };
-
-<div>
-    <ReferenceArrayField label="Aula" reference="aulas" source="aula">
-        <Datagrid>
-            <TextField source="nombre" />
-            <TextField source="ciudad" />
-            <TextField source="estado" />
-            <EditButton />
-        </Datagrid>
-    </ReferenceArrayField>
-</div>
-
 // source/components .map
 {/* <TextField source="CP" label="Codigo Postal" /> */ }
