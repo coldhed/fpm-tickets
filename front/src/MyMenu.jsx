@@ -13,6 +13,7 @@ export const MyMenu = () => (
         <Menu.Item to="/dashboard" primaryText="Tablero" leftIcon={<AppsIcon />}/>
         <Menu.Item to="/Tickets" primaryText="Tickets" leftIcon={<DraftsIcon />}/>
         <Menu.Item to="/Usuarios" primaryText="Usuarios" leftIcon={<EmojiPeopleIcon />}/>
+        <Menu.Item to="/Aula" primaryText="Aula" leftIcon={<LabelIcon />}/>
 
     </Menu>
 );
