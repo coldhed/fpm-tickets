@@ -7,7 +7,7 @@ async function createNewAula(nombre, coor_aula, direccion, ciudad, estado, codig
     try {
 
         let newAula = {
-            // "id": id,
+            "_id": id,
             "nombre": nombre,
             "coor_aula": coor_aula,
             "direccion": direccion,

@@ -8,9 +8,25 @@ const TicketTitle = () => {
     return <span className="px-2 text-xl font-bold text-navy-700 dark:text-white flex items-center justify-center">{record ? `${record.titulo}` : ''}</span>;
     
 };
-const InicioTextComponent = () => (
+
+
+// const InicioTextComponent = () => (
+//     <div className="customTextComp">
+//       <p>Inicio: </p>
+//     </div>
+// );
+
+const AulaTextComponent = () => (
     <div className="customTextComp">
-      <p>Inicio: </p>
+      <p>Aula: </p>
+    </div>
+);
+
+
+
+const TituloTextComponent = () => (
+    <div className="customTextComp">
+      <p>Título: </p>
     </div>
 );
 
@@ -64,11 +80,15 @@ export const TicketEdit = () => {
                     </div>
                 
                     <div className="grid grid-cols-2 gap-4 px-2 w-full">
-                        <div className="flex flex-col items-start justify-center rounded-2xl bg-white bg-clip-border px-3 py-4 shadow-3xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
+                        {/* <div className="flex flex-col items-start justify-center rounded-2xl bg-white bg-clip-border px-3 py-4 shadow-3xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
                             <InicioTextComponent />
                             <DateField label="Inicio" source="inicio" showTime />
-                        </div>
+                        </div> */}
 
+                        <div className="flex flex-col justify-center rounded-2xl bg-white bg-clip-border px-3 py-4 shadow-3xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
+                            < AulaTextComponent />
+                            <TextField label="Aula" source="aula" />
+                        </div>
                         <div className="flex flex-col justify-center rounded-2xl bg-white bg-clip-border px-3 py-4 shadow-3xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
                             < PrioridadTextComponent />
                             <TextField label="Prioridad" source="prioridad" />
