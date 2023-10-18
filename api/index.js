@@ -2,7 +2,6 @@ import express from "express"
 import cors from "cors"
 import dotenv from 'dotenv';
 import mongoSanitize from 'express-mongo-sanitize';
-import sanitize from 'sanitize';
 import https from "https";
 import fs from "fs";
 
