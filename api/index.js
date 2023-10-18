@@ -2,7 +2,7 @@ import express from "express"
 import cors from "cors"
 import dotenv from 'dotenv';
 import mongoSanitize from 'express-mongo-sanitize';
-
+import sanitize from 'sanitize';
 import https from "https";
 import fs from "fs";
 
@@ -10,7 +10,7 @@ dotenv.config();
 
 import { ENV, PORT } from "./const.js"
 import { connectDB } from './util.js';
-import { usersRouter, ticketRouter, aulasRouter } from "./routes/routes.js"
+import { usersRouter, ticketRouter, aulasRouter, dashboardRouter } from "./routes/routes.js"
 
 
 
@@ -29,8 +29,6 @@ app.use(
         },
     }),
 );
-
-
 
 // default route
 app.get("/", async (req, res) => {
