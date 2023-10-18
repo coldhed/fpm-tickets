@@ -3,6 +3,7 @@ import { ArrayInputProps, SimpleFormIterator, ArrayInput, Create, Toolbar, Selec
 import { Stack } from '@mui/material';
 import ArrowBack from "@mui/icons-material/ArrowBack";
 
+
 // const AulaTitle = () => {
 //     const record = useRecordContext();
 //     return <span>{record ? `${record.titulo}` : ''} </span>
@@ -44,22 +45,24 @@ const CalleTextComponent = () => (
 );
 
 export const AulaEdit = () => {
-    return (
-      <Edit>
-        <div className="relative flex flex-col items-center rounded-[20px] w-[700px] max-w-[95%] mx-auto bg-neutral-200 bg-clip-border shadow-3xl shadow-2xl">
-          <NombreTextComponent />
-          <TextField label="Nombre" source="nombre" />
-          <CoordinadorTextComponent />
-          <TextField label="Coordinador" source="coor_aula" />
-          <CiudadTextComponent />
-          <TextField label="Ciudad" source="ciudad" />
-          <EstadoTextComponent />
-          <TextField label="Estado" source="estado" />
-          <CPTextComponent />
-          <TextField label="Codigo Postal" source="CP" />
-          <CalleTextComponent />
-          <TextField label="Calle" source="calle" />
-        </div>
-      </Edit>
-    );
-  };
+  return (
+    <Edit>
+      <div className="relative flex flex-col items-center rounded-[20px] w-[700px] max-w-[95%] mx-auto bg-neutral-200 bg-clip-border shadow-3xl shadow-2xl">
+        <NombreTextComponent />
+        <TextField label="Nombre" source="nombre" />
+        <CoordinadorTextComponent />
+        <TextField label="Coordinador" source="coor_aula" />
+        <CiudadTextComponent />
+        <TextField label="Ciudad" source="ciudad" />
+        <EstadoTextComponent />
+        <TextField label="Estado" source="estado" />
+        <CPTextComponent />
+        <TextField label="Codigo Postal" source="CP" />
+        <CalleTextComponent />
+        <TextField label="Calle" source="calle" />
+
+        <DeleteWithConfirmButton label="Delete" />
+      </div>
+    </Edit>
+  );
+};
