@@ -24,7 +24,7 @@ export const AulaList = () => {
             <Datagrid rowClick="show" size="medium">
                 <TextField source="nombre" label="Nombre" />
                 <TextField source="ciudad" label="Ciudad" />
-                <TextField source="esatdo" label="Estado" />
+                <TextField source="estado" label="Estado" />
                 <CustomEditButton />
             </Datagrid>
         </List>
