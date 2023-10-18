@@ -77,10 +77,13 @@ export default function WeeklyStatus() {
                 backgroundColor: [
                     'rgb(68,150,64, 0.5)', // Verde
                     'rgb(195,45,51, 0.5)', // Rojo
+                    'rgb(245,224,78, 0.5)', // Amarillo
+
                   ],
                 borderColor: [
                     'rgb(68,150,64,1)', // Verde
                     'rgb(195,45,51,1)', // Rojo
+                    'rgb(245,224,78,1)' // Amarillo
                   ],
                 borderWidth: 1,
             },
