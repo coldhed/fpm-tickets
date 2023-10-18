@@ -10,6 +10,7 @@ const TicketTitle = () => {
     
 };
 
+
 // const InicioTextComponent = () => (
 //     <div className="customTextComp">
 //       <p>Inicio: </p>
@@ -20,7 +21,7 @@ const AulaTextComponent = () => (
     <div className="customTextComp">
       <p>Aula: </p>
     </div>
-);
+
 
 const TituloTextComponent = () => (
     <div className="customTextComp">
@@ -90,12 +91,12 @@ export const TicketEdit = () => {
                         {/* <div className="flex flex-col items-start justify-center rounded-2xl bg-white bg-clip-border px-3 py-4 shadow-3xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
                             <InicioTextComponent />
                             <DateField label="Inicio" source="inicio" showTime />
-                        </div> */}   
+                        </div> */}
+
                         <div className="flex flex-col justify-center rounded-2xl bg-white bg-clip-border px-3 py-4 shadow-3xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
-                            <AulaTextComponent />
+                            < AulaTextComponent />
                             <TextField label="Aula" source="aula" />
                         </div>
-
                         <div className="flex flex-col justify-center rounded-2xl bg-white bg-clip-border px-3 py-4 shadow-3xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
                             < PrioridadTextComponent />
                             <TextField label="Prioridad" source="prioridad" />
