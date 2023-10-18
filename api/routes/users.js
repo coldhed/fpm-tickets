@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { authenticate, logDB } from '../util.js';
+import { connectDB, authenticate, logDB } from '../util.js';
 import { createNewUser, doLogin, getMany, getCNs, deleteUser, getOne } from '../helpers/users.js';
 import { check, param, validationResult } from "express-validator";
 
