@@ -32,7 +32,7 @@ function Dashboard() {
             <br/>
 
             <div>
-                <p className="text-center fw-bold " style={{ fontSize: '2rem' }} >Tiempo pomedio de cierre de tickets: </p>
+                <p className="text-center fw-bold " style={{ fontSize: '2rem' }} >Tiempo promedio de cierre de tickets: </p>
                 <br/>
                 <div>
                 {tiempoPromedio !== null ? (
