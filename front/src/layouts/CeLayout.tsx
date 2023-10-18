@@ -17,7 +17,6 @@ import { TicketCreate } from "../elements/TicketCreate";
 import { TicketEdit } from "../elements/TicketUpdate";
 import { AulaCreate } from "../elements/Aula/AulaCreate";
 import { AulaList } from "../elements/Aula/AulaList";
-import { AulaShow } from "../elements/Aula/AulaShow";
 import Dashboard from "../Dashboard";
 import { AulaEdit } from "../elements/Aula/AulaUpdate";
 
