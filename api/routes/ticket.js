@@ -1,12 +1,12 @@
 import { Router } from 'express';
-import { connectDB } from '../util.js';
+import { connectDB, logDB, authenticate } from '../util.js';
 import { ObjectId } from 'mongodb';
-
+import { check, param, validationResult } from "express-validator";
 
 const router = Router();
 
 //getList, getMany, getManyReference
-router.get("/", async (req, res) => {
+router.get("/", authenticate(), async (req, res) => {
     let db = await connectDB();
     let data = [];
 
@@ -34,7 +34,7 @@ router.get("/", async (req, res) => {
             filter.estatus = req.query.estatus;
         }
 
-        data = await db.collection("Tickets").find(filter).sort(sorter).project({ }).toArray();
+        data = await db.collection("Tickets").find(filter).sort(sorter).project({}).toArray();
 
         res.set("Access-Control-Expose-Headers", "X-Total-Count"); //los headers de la respuesta
         res.set("X-Total-Count", data.length);
@@ -48,15 +48,15 @@ router.get("/", async (req, res) => {
             let dataObtain = await db.collection('Tickets').find({ _id: new ObjectId(request.query.id[index]) }).project({}).toArray(); // sacamos el valor del index y luego la proyección
             data = await data.concat(dataObtain)
         }
-        
-    } else { 
-        
+
+    } else {
+
 
         // data = await db.collection('Tickets').find(filter).project({ }).toArray();
         // res.set('Access-Control-Expose-Headers', 'X-Total-Count');
         // res.set('X-Total-Count', data.length);
 
-        data = await db.collection('Tickets').find(request.query).project({ }).toArray();
+        data = await db.collection('Tickets').find(req.query).project({}).toArray();
         res.set('Access-Control-Expose-Headers', 'X-Total-Count')
         res.set('X-Total-Count', data.length)
     }
@@ -69,17 +69,29 @@ router.get("/", async (req, res) => {
     //     data[i]["id"] = data[i]["_id"];
     // }
 
+    logDB("Tickets get list", req.userRequesting);
 
     res.json(data);
 })
 
 //getOne
-router.get("/:id", async (request, res) => {
+let getOneCheck = [param("id").exists().isMongoId().trim().escape()]
+router.get("/:id", getOneCheck, authenticate(), async (request, res) => {
+    // validate the :id we get is correct
+    const result = validationResult(request);
+
+    if (result.errors.length > 0) {
+        res.status(400)
+        return res.send({ errors: result.array() });
+    }
+
     let db = await connectDB();
 
     let data = await db.collection('Tickets').findOne({ "_id": new ObjectId(request.params.id) });
     data["id"] = data["_id"];
     delete data["_id"];
+
+    logDB(`Ticket get one: ${request.params.id}`, request.userRequesting);
 
     res.json(data);
 })
@@ -87,8 +99,20 @@ router.get("/:id", async (request, res) => {
 
 
 //create
-router.post("/", async (request, res) => {
-    // console.log(request.body)
+let createCheck = [
+    check("titulo").isString().trim().escape(),
+    check("aula").notEmpty().trim().escape(),
+    check("categoria").isString().trim().escape(),
+    check("subcategoria").isString().trim().escape(),
+]
+router.post("/", createCheck, authenticate(), async (request, res) => {
+    // check there are no errors with the request
+    const result = validationResult(request);
+
+    if (result.errors.length > 0) {
+        res.status(400);
+        return res.send({ errors: result.array() });
+    }
 
     let db = await connectDB();
     let addValue = request.body
@@ -98,12 +122,25 @@ router.post("/", async (request, res) => {
     // let data = await db.collection('Tickets').find({}).toArray();
     // let id = data.length + 1;
     // addValue["id"] = id;
+
     let data = await db.collection('Tickets').insertOne(addValue);
+
+    logDB(`Ticket create: ${data.insertedId}`, request.userRequesting);
+
     res.json(data);
 })
 
 //update
-router.put("/:id", async (request, res) => {
+let updateCheck = [param("id").exists().isMongoId().trim().escape()]
+router.put("/:id", updateCheck, authenticate(), async (request, res) => {
+    // sanitize
+    const result = validationResult(request);
+
+    if (result.errors.length > 0) {
+        res.status(400);
+        return res.send({ errors: result.array() });
+    }
+
     let db = await connectDB();
 
     let addValue = request.body;
@@ -126,24 +163,31 @@ router.put("/:id", async (request, res) => {
     data["id"] = data["_id"];
     delete data["_id"];
 
+    logDB(`Ticket update: ${data.id}`, request.userRequesting);
+
     res.json(data);
 })
 
 
 //delete
-router.delete("/:id", async (req, res) => {
+let deleteCheck = [param("id").exists().isMongoId().trim().escape()]
+router.delete("/:id", deleteCheck, authenticate(), async (req, res) => {
+    const result = validationResult(req);
+
+    if (result.errors.length > 0) {
+        res.status(400);
+        return res.send({ errors: result.array() });
+    }
+
     let db = await connectDB();
 
     let data = await db.collection('Tickets').deleteOne({ "_id": new ObjectId(req.params.id) });
     data["id"] = data["_id"];
     delete data["_id"];
 
+    logDB(`Ticket delete: ${data.id}`, req.userRequesting);
+
     res.json(data);
 })
-
-
-
-
-
 
 export default router;

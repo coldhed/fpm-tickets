@@ -1,17 +1,16 @@
 import express from "express"
 import cors from "cors"
 import dotenv from 'dotenv';
-
+import mongoSanitize from 'express-mongo-sanitize';
+import sanitize from 'sanitize';
 import https from "https";
 import fs from "fs";
-// const fs = require("fs")
-
 
 dotenv.config();
 
 import { ENV, PORT } from "./const.js"
-import { usersRouter, ticketRouter, aulasRouter, dashboardRouter} from "./routes/routes.js"
 import { connectDB } from './util.js';
+import { usersRouter, ticketRouter, aulasRouter, dashboardRouter } from "./routes/routes.js"
 
 
 
@@ -19,9 +18,17 @@ import { connectDB } from './util.js';
 
 const app = express();
 app.use(express.json());
-app.use(cors()); // cualquier dominio puede pingear al api
-// app.use(bodyParser.json()); //NUEVO
+app.use(cors());
 
+// avoid nosql injection by replacing mongo prohibited chars with _
+app.use(
+    mongoSanitize({
+        replaceWith: '_',
+        onSanitize: ({ req, key }) => {
+            console.warn(`This request[${key}] is sanitized`, req);
+        },
+    }),
+);
 
 // default route
 app.get("/", async (req, res) => {
@@ -40,7 +47,7 @@ app.use("/dashboard", dashboardRouter)
 //     console.log("DB connected");
 // });
 
-https.createServer({cert: fs.readFileSync("backend.cer"), key: fs.readFileSync("backend.key")}, app).listen(4000, ()=>{
+https.createServer({ cert: fs.readFileSync("backend.cer"), key: fs.readFileSync("backend.key") }, app).listen(4000, () => {
     connectDB();
     // console.log("Servidor escuchando en puerto 1337")
     console.log("Server started");

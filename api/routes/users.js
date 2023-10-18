@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { authenticate } from '../util.js';
+import { connectDB, authenticate, logDB } from '../util.js';
 import { createNewUser, doLogin, getMany, getCNs, deleteUser, getOne } from '../helpers/users.js';
-import jwt from 'jsonwebtoken';
+import { check, param, validationResult } from "express-validator";
 
 const router = Router();
 
@@ -10,33 +10,21 @@ router.get("/cn", authenticate(new Set(["ce"])), async (req, res) => {
     await getCNs(req, res);
 })
 
-router.get("/correo", async (req, res) => {
+// get all emails
+router.get("/correo", authenticate(new Set(["ce"])), async (req, res) => {
     let db = await connectDB();
-    let users = await db.collection("Usuarios").find({}).project({_id: 1, correo: 1}).toArray();
-    
+    let users = await db.collection("Usuarios").find({}).project({ _id: 1, correo: 1 }).toArray();
+
     users.map((user) => {
         user["id"] = user["_id"];
         delete user["_id"];
-        
+
         user["name"] = user["correo"];
         delete user["correo"];
 
     })
-    res.json(users);
-})
 
-router.get("/correo", async (req, res) => {
-    let db = await connectDB();
-    let users = await db.collection("Usuarios").find({}).project({_id: 1, correo: 1}).toArray();
-    
-    users.map((user) => {
-        user["id"] = user["_id"];
-        delete user["_id"];
-        
-        user["name"] = user["correo"];
-        delete user["correo"];
-
-    })
+    logDB("get all emails", req.userRequesting);
     res.json(users);
 })
 
@@ -46,22 +34,63 @@ router.get("/", authenticate(new Set(["ce"])), async (req, res) => {
 });
 
 // get one
-router.get("/:id", authenticate(new Set(["ce"])), async (req, res) => {
+let getByIdCheck = [param("id").exists().isMongoId().trim().escape()]
+router.get("/:id", getByIdCheck, authenticate(new Set(["ce"])), async (req, res) => {
+    const result = validationResult(req);
+
+    if (result.errors.length > 0) {
+        res.status(400)
+        return res.send({ errors: result.array() });
+    }
+
     await getOne(req, res);
 });
 
 // create a user
-router.post("/", authenticate(new Set(["ce"])), async (req, res) => {
+let createCheck = [
+    check("rol").isLength(2).exists().isString().trim().escape(),
+    check("nombre_completo").isString().trim().escape(),
+    check("correo").isEmail().normalizeEmail().trim().escape(),
+    check("contrasena").isString().trim().escape(),
+    check("coor_nac").isMongoId().trim().escape(),
+];
+router.post("/", createCheck, authenticate(new Set(["ce"])), async (req, res) => {
+    const result = validationResult(req);
+
+    if (result.errors.length > 0) {
+        res.status(400)
+        return res.send({ errors: result.array() });
+    }
+
     await createNewUser(req, res);
 })
 
 // delete a user
-router.delete("/:id", authenticate(new Set(["ce"])), async (req, res) => {
+let deleteCheck = [param("id").exists().isMongoId().trim().escape()]
+router.delete("/:id", deleteCheck, authenticate(new Set(["ce"])), async (req, res) => {
+    const result = validationResult(req);
+
+    if (result.errors.length > 0) {
+        res.status(400)
+        return res.send({ errors: result.array() });
+    }
+
     await deleteUser(req, res);
 })
 
 // login
-router.post("/login", async (req, res) => {
+let loginCheck = [
+    check("correo").isEmail().normalizeEmail().trim().escape(),
+    check("contrasena").isString().trim().escape(),
+];
+router.post("/login", loginCheck, async (req, res) => {
+    const result = validationResult(req);
+
+    if (result.errors.length > 0) {
+        res.status(400)
+        return res.send({ errors: result.array() });
+    }
+
     await doLogin(req, res);
 })
 
