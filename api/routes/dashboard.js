@@ -6,7 +6,7 @@ import { connectDB } from '../util.js';
 const router = Router();
 
 // primera grafica
-// Cual categoria es la más usada
+// Cual categoria es la más usada, cual es la categoría en la que mas tickets son abiertos
 router.get("/category-usage", async (req, res) => {
     try {
         const db = await connectDB();
@@ -36,7 +36,7 @@ router.get("/category-usage", async (req, res) => {
             categoryTypes.push(categoryId);
             usageCounts.push(categoryCount);
         });
-
+        // regresar los datos en formato JSON
         res.json({ categoryTypes, usageCounts });
     } catch (error) {
         console.error(error);
@@ -46,8 +46,7 @@ router.get("/category-usage", async (req, res) => {
 
 
 // segunda grafica
-// Cuantos tickets hay por aula
-
+// Cuantos tickets hay por aula para saber cual aula es la que tiene más tickets
 router.get("/tickets-per-aula", async (req, res) => {
     try {
         const db = await connectDB();
@@ -85,6 +84,7 @@ router.get("/tickets-per-aula", async (req, res) => {
 });
 
 // 3 three status
+// Cuantos tickets hay por estatus para saber cual estatus es el que tiene más tickets
 
 router.get("/tickets-by-status", async (req, res) => {
     try {
@@ -128,7 +128,7 @@ router.get("/tickets-by-status", async (req, res) => {
 
 
 // 4
-// promedio 
+// promedio en el que un ticket pasa de abierto a cerrado
 router.get("/tiempo-promedio-cierre", async (req, res) => {
     try {
         const db = await connectDB();

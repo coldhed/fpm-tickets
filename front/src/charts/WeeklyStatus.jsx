@@ -72,7 +72,7 @@ export default function WeeklyStatus() {
         labels: status,
         datasets: [ 
             {
-                label: 'Aula con más y menos reportes',
+                label: 'Status abierto y cerrado',
                 data: frecuencia,
                 backgroundColor: [
                     'rgb(68,150,64, 0.5)', // Verde
