@@ -19,7 +19,6 @@ export const AulaCreate = (props: any) => {
 
         try {
             let response = await fetch(request);
-            console.log(await response.json)
             let data = await response.json();
 
             setCoor(data);
@@ -45,7 +44,7 @@ export const AulaCreate = (props: any) => {
                     {({ formData, ...rest }) => {
                         return (
                             <SelectInput
-                                source="Usuarios"
+                                source="coor_aula"
                                 label="Coordinador"
                                 isLoading={isLoading}
                                 choices={nomCoor}

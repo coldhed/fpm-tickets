@@ -117,7 +117,7 @@ router.get("/:id", getOneCheck, authenticate(new Set(["ce", "cn"])), async (req,
 //AulaCreate
 let createCheck = [
     check("nombre").isString().notEmpty().trim().escape(),
-    check("coor_aula").isEmail().normalizeEmail().trim().escape(),
+    check("coor_aula").isMongoId().trim().escape(),
     check("ciudad").isString().trim().escape(),
     check("estado").isString().trim().escape(),
     check("CP").isString().trim().escape(),
