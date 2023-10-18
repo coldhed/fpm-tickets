@@ -1,13 +1,13 @@
 import { Router } from 'express';
 
 
-import { connectDB } from '../util.js';
+import { connectDB, logDB, authenticate } from '../util.js';
 
 const router = Router();
 
 // primera grafica
 // Cual categoria es la más usada
-router.get("/category-usage", async (req, res) => {
+router.get("/category-usage", authenticate(new Set(["ce"])), async (req, res) => {
     try {
         const db = await connectDB();
         // Hello
@@ -25,7 +25,7 @@ router.get("/category-usage", async (req, res) => {
         // Organizar los datos en dos arrays: uno para el tipo de categoría y otro para la cantidad de uso
         const categoryTypes = [];
         const usageCounts = [];
-        
+
         categoryUsage.forEach((entry) => {
             // Suponemos que la categoría está almacenada como un ObjectId en la base de datos.
             // Debes convertirlo a una cadena si es necesario.
@@ -36,6 +36,8 @@ router.get("/category-usage", async (req, res) => {
             categoryTypes.push(categoryId);
             usageCounts.push(categoryCount);
         });
+
+        logDB("dash: get category usage", req.userRequesting)
 
         res.json({ categoryTypes, usageCounts });
     } catch (error) {
@@ -48,7 +50,7 @@ router.get("/category-usage", async (req, res) => {
 // segunda grafica
 // Cuantos tickets hay por aula
 
-router.get("/tickets-per-aula", async (req, res) => {
+router.get("/tickets-per-aula", authenticate(new Set(["ce"])), async (req, res) => {
     try {
         const db = await connectDB();
 
@@ -65,7 +67,7 @@ router.get("/tickets-per-aula", async (req, res) => {
         // Organizar los datos en dos arrays: uno para las aulas y otro para la cantidad de tickets
         const aulaNames = [];
         const ticketCounts = [];
-        
+
         ticketsPerAula.forEach((entry) => {
             // Suponemos que el aula está almacenada como un ObjectId en la base de datos.
             // Debes convertirlo a una cadena si es necesario.
@@ -77,6 +79,8 @@ router.get("/tickets-per-aula", async (req, res) => {
             ticketCounts.push(ticketCount);
         });
 
+        logDB("dash: tickets per aula", req.userRequesting)
+
         res.json({ aulaNames, ticketCounts });
     } catch (error) {
         console.error(error);
@@ -86,7 +90,7 @@ router.get("/tickets-per-aula", async (req, res) => {
 
 // 3 three status
 
-router.get("/tickets-by-status", async (req, res) => {
+router.get("/tickets-by-status", authenticate(new Set(["ce"])), async (req, res) => {
     try {
         const db = await connectDB();
 
@@ -118,6 +122,8 @@ router.get("/tickets-by-status", async (req, res) => {
             ticketCounts.push(ticketCount);
         });
 
+        logDB("dash: tickets by status", req.userRequesting)
+
         res.json({ statuses, ticketCounts });
     } catch (error) {
         console.error(error);
@@ -129,12 +135,12 @@ router.get("/tickets-by-status", async (req, res) => {
 
 // 4
 // promedio 
-router.get("/tiempo-promedio-cierre", async (req, res) => {
+router.get("/tiempo-promedio-cierre", authenticate(new Set(["ce"])), async (req, res) => {
     try {
         const db = await connectDB();
 
         // Consulta para obtener los tickets en estado "Cerrado"
-        const ticketsCerrados = await db.collection('Tickets').find({estatus: "Cerrado"}).toArray();
+        const ticketsCerrados = await db.collection('Tickets').find({ estatus: "Cerrado" }).toArray();
 
         let totalTiempo = 0;
 
@@ -145,9 +151,10 @@ router.get("/tiempo-promedio-cierre", async (req, res) => {
         }
 
         const tiempoPromedio = totalTiempo / ticketsCerrados.length;
-        
+
         const tiempoFinal = Math.floor(tiempoPromedio / 1000 / 60 / 60); // a horas
 
+        logDB("dash: tiempo promedio cierre", req.userRequesting)
 
         res.json({ tiempoFinal });
     } catch (error) {
