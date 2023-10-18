@@ -9,6 +9,8 @@ const TicketTitle = () => {
     return <span className="px-2 text-xl font-bold text-navy-700 dark:text-white flex items-center justify-center">{record ? `${record.titulo}` : ''}</span>;
     
 };
+
+
 // const InicioTextComponent = () => (
 //     <div className="customTextComp">
 //       <p>Inicio: </p>
@@ -19,7 +21,7 @@ const AulaTextComponent = () => (
     <div className="customTextComp">
       <p>Aula: </p>
     </div>
-); 
+
 
 const TituloTextComponent = () => (
     <div className="customTextComp">
