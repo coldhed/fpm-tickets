@@ -75,7 +75,7 @@ const MyLoginPage = ({ theme }) => {
                                                         type="button"
                                                         style={{
                                                             background:
-                                                                "#c22032",
+                                                                "#04953f",
                                                         }}
                                                         onClick={handleSubmit}
                                                     >
@@ -92,7 +92,7 @@ const MyLoginPage = ({ theme }) => {
                                     className="flex items-center rounded-b-lg lg:w-6/12 lg:rounded-r-lg lg:rounded-bl-none"
                                     style={{
                                         background:
-                                            "#c22032",
+                                            "#04953f",
                                     }}
                                 >
                                     <div className="px-4 py-6 text-white md:mx-6 md:p-10">

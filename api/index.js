@@ -13,6 +13,9 @@ import { connectDB } from './util.js';
 import { usersRouter, ticketRouter, aulasRouter } from "./routes/routes.js"
 
 
+
+// const bodyParser = require("body-parser") //NUEVO
+
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -38,6 +41,7 @@ app.get("/", async (req, res) => {
 app.use("/Usuarios", usersRouter)
 app.use("/Tickets", ticketRouter)
 app.use("/Aula", aulasRouter)
+app.use("/dashboard", dashboardRouter)
 
 // app.listen(PORT, () => {
 //     console.log("Server started");
