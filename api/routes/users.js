@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { authenticate, logDB } from '../util.js';
 import { createNewUser, doLogin, getMany, getCNs, deleteUser, getOne } from '../helpers/users.js';
-import { check, param } from "express-validator";
+import { check, param, validationResult } from "express-validator";
 
 const router = Router();
 
@@ -36,6 +36,13 @@ router.get("/", authenticate(new Set(["ce"])), async (req, res) => {
 // get one
 let getByIdCheck = [param("id").exists().isMongoId().trim().escape()]
 router.get("/:id", getByIdCheck, authenticate(new Set(["ce"])), async (req, res) => {
+    const result = validationResult(req);
+
+    if (result.errors.length > 0) {
+        res.status(400)
+        return res.send({ errors: result.array() });
+    }
+
     await getOne(req, res);
 });
 
@@ -48,12 +55,26 @@ let createCheck = [
     check("coor_nac").isMongoId().trim().escape(),
 ];
 router.post("/", createCheck, authenticate(new Set(["ce"])), async (req, res) => {
+    const result = validationResult(req);
+
+    if (result.errors.length > 0) {
+        res.status(400)
+        return res.send({ errors: result.array() });
+    }
+
     await createNewUser(req, res);
 })
 
 // delete a user
 let deleteCheck = [param("id").exists().isMongoId().trim().escape()]
 router.delete("/:id", deleteCheck, authenticate(new Set(["ce"])), async (req, res) => {
+    const result = validationResult(req);
+
+    if (result.errors.length > 0) {
+        res.status(400)
+        return res.send({ errors: result.array() });
+    }
+
     await deleteUser(req, res);
 })
 
@@ -63,6 +84,13 @@ let loginCheck = [
     check("contrasena").isString().trim().escape(),
 ];
 router.post("/login", loginCheck, async (req, res) => {
+    const result = validationResult(req);
+
+    if (result.errors.length > 0) {
+        res.status(400)
+        return res.send({ errors: result.array() });
+    }
+
     await doLogin(req, res);
 })
 
